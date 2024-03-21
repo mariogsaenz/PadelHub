@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "72296249609",
+    "project_id": "padelhub-5df21",
+    "storage_bucket": "padelhub-5df21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72296249609:android:99ef159265edd208453bd8",
+        "android_client_info": {
+          "package_name": "com.example.padelhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbUqDeDuam3Nd2Zp3ul5CDlj25Bzv1myk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
