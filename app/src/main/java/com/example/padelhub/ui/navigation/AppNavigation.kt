@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.padelhub.ui.screens.CrearPartidoScreen
 import com.example.padelhub.ui.screens.HomeScreenChat
 import com.example.padelhub.ui.screens.HomeScreenInicio
 import com.example.padelhub.ui.screens.HomeScreenPerfil
@@ -24,6 +25,9 @@ fun AppNavigation(){
         }
         composable(route=AppScreens.HomeScreen_Perfil.route){
             HomeScreenPerfil(navController)
+        }
+        composable(route=AppScreens.HomeScreen_CrearPartido.route){
+            CrearPartidoScreen(navController)
         }
     }
 }
