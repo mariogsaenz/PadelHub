@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.padelhub.ui.screens.HomeScreen
+import com.example.padelhub.ui.navigation.AppNavigation
 import com.example.padelhub.ui.theme.PadelHubTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PadelHubTheme {
-                HomeScreen()
+                AppNavigation()
             }
         }
     }
