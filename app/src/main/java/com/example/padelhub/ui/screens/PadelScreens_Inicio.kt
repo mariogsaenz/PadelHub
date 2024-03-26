@@ -79,7 +79,7 @@ fun TopBarAppInicio(){
 
 @Composable
 fun ContenidoAppInicio(navController: NavController) {
-    Surface(color = Color.White) {
+    Surface(color = verdePadel) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -96,55 +96,47 @@ fun ContenidoAppInicio(navController: NavController) {
 
 @Composable
 fun BottomNavigationInicio(navController: NavController) {
-    val gradient = Brush.horizontalGradient(
-        0.0f to verdePadel,
-        0.5f to Color.Green,
-        1.0f to Color.Yellow,
-        startX = 0.0f,
-        endX = 1000.0F
-    )
     Surface(
         color = Color.Transparent
     ) {
         BottomAppBar(
             containerColor = Color.Transparent, //Color del container
-            contentColor = Color.Black, //Color de los iconos
-
+            contentColor = Color.White, //Color de los iconos
             content = {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(60.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(gradient),
-                    horizontalArrangement = Arrangement.SpaceAround,
+                        .clip(RoundedCornerShape(35))
+                        .background(Color.Black),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Inicio.route) }) {
                         Icon(
-                            modifier = Modifier.size(26.dp),
-                            painter = painterResource(id = R.drawable.home_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_home con el recurso de tu icono de inicio
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.home_24px), // Reemplaza R.drawable.ic_home con el recurso de tu icono de inicio
                             contentDescription = "Inicio"
                         )
                     }
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Pistas.route) }) {
                         Icon(
-                            modifier = Modifier.size(26.dp),
-                            painter = painterResource(id = R.drawable.sports_baseball_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_court con el recurso de tu icono de pistas
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.sports_baseball_24px__1_), // Reemplaza R.drawable.ic_court con el recurso de tu icono de pistas
                             contentDescription = "Pistas"
                         )
                     }
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Chat.route) }) {
                         Icon(
-                            modifier = Modifier.size(26.dp),
-                            painter = painterResource(id = R.drawable.chat_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.chat_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
                             contentDescription = "Chat"
                         )
                     }
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Perfil.route) }) {
                         Icon(
-                            modifier = Modifier.size(26.dp),
-                            painter = painterResource(id = R.drawable.person_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_profile con el recurso de tu icono de perfil
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.person_24px), // Reemplaza R.drawable.ic_profile con el recurso de tu icono de perfil
                             contentDescription = "Perfil"
                         )
                     }
