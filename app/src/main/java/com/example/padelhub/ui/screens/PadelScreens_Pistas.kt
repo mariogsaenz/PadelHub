@@ -220,4 +220,3 @@ fun AnadirPistaScreen(navController: NavController) {
 
 
 
-

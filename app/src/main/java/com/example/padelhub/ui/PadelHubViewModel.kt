@@ -9,3 +9,4 @@ import androidx.lifecycle.ViewModel
 class PadelHubViewModel: ViewModel() {
 
 }
+
