@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialogDefaults.containerColor
@@ -38,6 +39,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults.contentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -52,6 +54,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.padelhub.R
 import com.example.padelhub.ui.navigation.AppScreens
@@ -71,7 +75,13 @@ fun HomeScreenInicio(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBarAppInicio(){
     TopAppBar(
-        title = { Text(text="PADEL HUB") },
+        title = { Text(
+                    text="PADEL HUB",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
+                    ) },
         modifier = Modifier.fillMaxWidth()
             .background(Color.Blue)
     )
