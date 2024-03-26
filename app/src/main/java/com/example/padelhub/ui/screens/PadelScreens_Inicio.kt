@@ -3,6 +3,7 @@ package com.example.padelhub.ui.screens
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
@@ -52,6 +54,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,95 +67,37 @@ import com.example.padelhub.ui.navigation.AppScreens
 @Composable
 fun HomeScreenInicio(navController: NavController) {
     Scaffold(
-        topBar = { TopBarAppInicio() },
-        bottomBar = { BottomNavigationInicio(navController) }
+        topBar = { TopBarApp() },
+        bottomBar = { BottomNavigation(navController) }
     ) {
         ContenidoAppInicio(navController)
     }
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun TopBarAppInicio(){
-    TopAppBar(
-        title = { Text(
-                    text="PADEL HUB",
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
-                    ) },
-        modifier = Modifier.fillMaxWidth()
-            .background(Color.Blue)
-    )
-}
-
-@Composable
 fun ContenidoAppInicio(navController: NavController) {
-    Surface(color = verdePadel) {
+    val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
+    Surface(color = verdePadel,
+        modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = backgroundImage,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Contenido de la pantalla de inicio")
+            Text(
+                text = "Contenido de la pantalla de inicio",
+                color = Color.White
+            )
             //AQUÍ HABRÁ QUE PONER EL CONTENIDO QUE QUERAMOS MOSTRAR
             Button(onClick = { navController.navigate("crear_partido") }) {
                 Text(text = "Crear Partido")
             }
         }
-    }
-}
-
-@Composable
-fun BottomNavigationInicio(navController: NavController) {
-    Surface(
-        color = Color.Transparent
-    ) {
-        BottomAppBar(
-            containerColor = Color.Transparent, //Color del container
-            contentColor = Color.White, //Color de los iconos
-            content = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp)
-                        .clip(RoundedCornerShape(35))
-                        .background(Color.Black),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Inicio.route) }) {
-                        Icon(
-                            modifier = Modifier.size(30.dp),
-                            painter = painterResource(id = R.drawable.home_24px), // Reemplaza R.drawable.ic_home con el recurso de tu icono de inicio
-                            contentDescription = "Inicio"
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Pistas.route) }) {
-                        Icon(
-                            modifier = Modifier.size(30.dp),
-                            painter = painterResource(id = R.drawable.sports_baseball_24px__1_), // Reemplaza R.drawable.ic_court con el recurso de tu icono de pistas
-                            contentDescription = "Pistas"
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Chat.route) }) {
-                        Icon(
-                            modifier = Modifier.size(30.dp),
-                            painter = painterResource(id = R.drawable.chat_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
-                            contentDescription = "Chat"
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Perfil.route) }) {
-                        Icon(
-                            modifier = Modifier.size(30.dp),
-                            painter = painterResource(id = R.drawable.person_24px), // Reemplaza R.drawable.ic_profile con el recurso de tu icono de perfil
-                            contentDescription = "Perfil"
-                        )
-                    }
-                }
-            }
-        )
     }
 }
 
