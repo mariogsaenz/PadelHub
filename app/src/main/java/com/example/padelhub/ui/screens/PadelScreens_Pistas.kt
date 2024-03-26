@@ -32,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,10 +47,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.example.padelhub.R
+import com.example.padelhub.ui.theme.verdePadel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -73,7 +77,7 @@ fun TopBarAppPistas(){
 
 @Composable
 fun ContenidoAppPistas(navController: NavController) {
-    Surface(color = Color.White) {
+    Surface(color = verdePadel) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -90,37 +94,47 @@ fun ContenidoAppPistas(navController: NavController) {
 
 @Composable
 fun BottomNavigationPistas(navController: NavController) {
-    Surface(color = Color.White) {
+    Surface(
+        color = Color.Transparent
+    ) {
         BottomAppBar(
+            containerColor = Color.Transparent, //Color del container
+            contentColor = Color.White, //Color de los iconos
             content = {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
+                        .height(60.dp)
+                        .clip(RoundedCornerShape(35))
+                        .background(Color.Black),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Inicio.route) }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.home_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_home con el recurso de tu icono de inicio
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.home_24px), // Reemplaza R.drawable.ic_home con el recurso de tu icono de inicio
                             contentDescription = "Inicio"
                         )
                     }
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Pistas.route) }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.sports_baseball_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_court con el recurso de tu icono de pistas
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.sports_baseball_24px__1_), // Reemplaza R.drawable.ic_court con el recurso de tu icono de pistas
                             contentDescription = "Pistas"
                         )
                     }
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Chat.route) }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.chat_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.chat_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
                             contentDescription = "Chat"
                         )
                     }
                     IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Perfil.route) }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.person_fill0_wght400_grad0_opsz24), // Reemplaza R.drawable.ic_profile con el recurso de tu icono de perfil
+                            modifier = Modifier.size(30.dp),
+                            painter = painterResource(id = R.drawable.person_24px), // Reemplaza R.drawable.ic_profile con el recurso de tu icono de perfil
                             contentDescription = "Perfil"
                         )
                     }
