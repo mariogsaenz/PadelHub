@@ -23,7 +23,7 @@ import com.google.firebase.auth.auth
 class MainActivity : ComponentActivity() {
 
     //[START declare_auth]
-    //private lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     //[END declare_auth]
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
         // [START initialize_auth]
         // Initialize Firebase Auth
-        //auth = Firebase.auth
+        auth = Firebase.auth
         // [END initialize_auth]
 
 
@@ -48,11 +48,11 @@ class MainActivity : ComponentActivity() {
     // [START on_start_check_user]
     public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        //val currentUser = auth.currentUser
-        //if (currentUser != null) {
-        //    reload()
-        //}
+        //Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            reload()
+        }
     }
 
     private fun createAccount(email: String, password: String) {
