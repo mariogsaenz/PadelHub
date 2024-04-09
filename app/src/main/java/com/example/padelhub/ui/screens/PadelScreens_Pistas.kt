@@ -4,6 +4,7 @@ import com.example.padelhub.ui.navigation.AppScreens
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,13 +72,22 @@ fun HomeScreenPistas(navController: NavController) {
 
 @Composable
 fun ContenidoAppPistas(navController: NavController) {
+    val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
     Surface(color = verdePadel) {
+        Image(
+            painter = backgroundImage,
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
+        )
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Contenido de la pantalla de pistas")
+            Text(
+                text = "Contenido de la pantalla de pistas",
+                color = Color.White
+            )
             //AQUÍ HABRÁ QUE PONER EL CONTENIDO QUE QUERAMOS MOSTRAR
             Button(onClick = { navController.navigate("anadir_pista") }) {
                 Text(text = "Añadir una pista")
