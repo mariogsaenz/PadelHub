@@ -23,7 +23,7 @@ import com.google.firebase.auth.auth
 class MainActivity : ComponentActivity() {
 
     //[START declare_auth]
-    private lateinit var auth: FirebaseAuth
+    //private lateinit var auth: FirebaseAuth
     //[END declare_auth]
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
         // [START initialize_auth]
         // Initialize Firebase Auth
-        auth = Firebase.auth
+        //auth = Firebase.auth
         // [END initialize_auth]
 
 
@@ -49,14 +49,15 @@ class MainActivity : ComponentActivity() {
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            reload()
-        }
+        //val currentUser = auth.currentUser
+        //if (currentUser != null) {
+        //    reload()
+        //}
     }
 
     private fun createAccount(email: String, password: String) {
         // [START create_user_with_email]
+        /*
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -75,11 +76,14 @@ class MainActivity : ComponentActivity() {
                     updateUI(null)
                 }
             }
+            */
+
         // [END create_user_with_email]
     }
 
     private fun signIn(email: String, password: String) {
         // [START sign_in_with_email]
+        /*
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -98,16 +102,21 @@ class MainActivity : ComponentActivity() {
                     updateUI(null)
                 }
             }
+
+         */
         // [END sign_in_with_email]
     }
 
     private fun sendEmailVerification() {
         // [START send_email_verification]
+        /*
         val user = auth.currentUser!!
         user.sendEmailVerification()
             .addOnCompleteListener(this) { task ->
                 // Email Verification sent
             }
+
+         */
         // [END send_email_verification]
     }
 
