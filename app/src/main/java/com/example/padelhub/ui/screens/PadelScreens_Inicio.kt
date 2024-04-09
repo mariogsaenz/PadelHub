@@ -97,6 +97,9 @@ fun ContenidoAppInicio(navController: NavController) {
             Button(onClick = { navController.navigate("crear_partido") }) {
                 Text(text = "Crear Partido")
             }
+            Button(onClick = { navController.navigate("buscar_partidos") }) {
+                Text(text = "Buscar partidos")
+            }
         }
     }
 }
@@ -184,6 +187,16 @@ fun CrearPartidoScreen(navController: NavController) {
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun BuscarPartidosScreen(navController: NavController) {
+    //En este método habría que conectar con la base de datos, obtener la lista de partidos disponibles
+    //y mostrarlos en forma de columna (LazyColumn imagino que será)
+
+    //Dentro de cada uno de los partidos debe haber un botón que sea "Unirme al partido",
+    //que me permita unirme al partido y añada al usuario creador del partido a mi chat
 }
 
 

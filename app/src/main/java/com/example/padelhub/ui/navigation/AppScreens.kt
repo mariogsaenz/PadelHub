@@ -7,4 +7,5 @@ sealed class AppScreens(val route: String) {
     object HomeScreen_Perfil: AppScreens("pantalla_perfil")
     object HomeScreen_Inicio_CrearPartido: AppScreens("crear_partido")
     object HomeScreen_Pistas_AnadirPista: AppScreens("anadir_pista")
+    object HomeScreen_Inicio_BuscarPartidos: AppScreens("buscar_partidos")
 }

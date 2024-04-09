@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.padelhub.ui.screens.AnadirPistaScreen
+import com.example.padelhub.ui.screens.BuscarPartidosScreen
 import com.example.padelhub.ui.screens.CrearPartidoScreen
 import com.example.padelhub.ui.screens.HomeScreenChat
 import com.example.padelhub.ui.screens.HomeScreenInicio
@@ -35,6 +36,9 @@ fun AppNavigation(){
         }
         composable(route=AppScreens.HomeScreen_Pistas_AnadirPista.route){
             AnadirPistaScreen(navController)
+        }
+        composable(route=AppScreens.HomeScreen_Inicio_BuscarPartidos.route){
+            BuscarPartidosScreen(navController)
         }
     }
 }
