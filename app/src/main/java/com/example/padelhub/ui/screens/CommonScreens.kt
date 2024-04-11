@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
@@ -46,11 +47,11 @@ fun TopBarApp(){
                     painter = painterResource(id = R.drawable.logo_padelhub3),
                     contentDescription = "Logo",
                     modifier = Modifier.size(400.dp)
+                        .padding(0.dp,50.dp)
                 )
             }
         },
         modifier = Modifier.fillMaxWidth()
-            .background(Color.Blue)
     )
 
     /*TopAppBar(
