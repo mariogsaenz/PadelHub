@@ -1,8 +1,10 @@
 package com.example.padelhub.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -32,7 +34,26 @@ import com.example.padelhub.ui.navigation.AppScreens
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBarApp(){
+
     TopAppBar(
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_padelhub3),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(400.dp)
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+            .background(Color.Blue)
+    )
+
+    /*TopAppBar(
         title = { Text(
             text="PADEL HUB",
             modifier = Modifier
@@ -42,7 +63,7 @@ fun TopBarApp(){
         ) },
         modifier = Modifier.fillMaxWidth()
             .background(Color.Blue)
-    )
+    )*/
 }
 
 @Composable

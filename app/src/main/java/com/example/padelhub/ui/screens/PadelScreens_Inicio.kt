@@ -145,7 +145,6 @@ fun CrearPartidoScreen(navController: NavController) {
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
-
             TimePicker(
                 label = "Hora del partido",
                 value = hora,
