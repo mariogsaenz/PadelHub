@@ -6,8 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.padelhub.ui.login.LoginScreen
-import com.example.padelhub.ui.login.RegisterScreen
+import com.example.padelhub.MainActivity
 import com.example.padelhub.ui.screens.AnadirPistaScreen
 import com.example.padelhub.ui.screens.BuscarPartidosScreen
 import com.example.padelhub.ui.screens.CrearPartidoScreen
@@ -22,10 +21,10 @@ fun AppNavigation(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
         composable(route=AppScreens.HomeScreen_Login.route){
-            LoginScreen(navController)
+            MainActivity().LoginScreen(navController)
         }
         composable(route=AppScreens.HomeScreen_Registro.route){
-            RegisterScreen(navController)
+            MainActivity().RegisterScreen(navController)
         }
         composable(route=AppScreens.HomeScreen_Inicio.route){
             HomeScreenInicio(navController)
