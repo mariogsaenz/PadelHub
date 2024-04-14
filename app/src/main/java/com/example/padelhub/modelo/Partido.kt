@@ -1,4 +1,4 @@
-package com.example.padelhub.persistencia
+package com.example.padelhub.modelo
 
 data class Partido(
     val id: Int,

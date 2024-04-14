@@ -91,9 +91,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun createAccount(email: String, password: String, navController: NavController, context: Context) {
+    private fun createAccount(nombre: String, edad: Int, email: String, password: String, navController: NavController, context: Context) {
         // [START create_user_with_email]
         auth = Firebase.auth
+        database = Firebase.firestore
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -106,6 +107,15 @@ class MainActivity : ComponentActivity() {
                         "Te has registrado con exito.",
                         Toast.LENGTH_SHORT,
                     ).show()
+                    val usuario = hashMapOf(
+                        "nombre" to nombre,
+                        "edad" to edad,
+                        "email" to email,
+                    )
+                    database.collection("usuario").document(usuario[email].toString())
+                        .set(usuario)
+                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                     navController.navigate(route = AppScreens.HomeScreen_Inicio.route)
 
                 } else {
@@ -316,7 +326,7 @@ class MainActivity : ComponentActivity() {
                         //Dependiendo de si se ha podido registrar al usuario o no navegaremos a una pantalla u otra
                         //createAccount(email,password)
                         onClick = {
-                            createAccount(email, password, navController, context)
+                            createAccount(nombre, edad.toInt(), email, password, navController, context)
                         },
                         modifier = androidx.compose.ui.Modifier.fillMaxWidth()
                     ) {
