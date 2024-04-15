@@ -1,8 +1,10 @@
 package com.example.padelhub.modelo
 
 data class Partido(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val imageRes : Int
+    val id: String,
+    val nombre: String,
+    val fecha: String,
+    val hora: String,
+    val ubicacion: String,
+    val estado: Boolean
 )

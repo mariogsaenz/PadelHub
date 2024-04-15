@@ -48,7 +48,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             AnadirPistaScreen(navController)
         }
         composable(route=AppScreens.HomeScreen_Inicio_BuscarPartidos.route){
-            BuscarPartidosScreen(navController)
+            BuscarPartidosScreen(navController, database)
         }
 
     }
