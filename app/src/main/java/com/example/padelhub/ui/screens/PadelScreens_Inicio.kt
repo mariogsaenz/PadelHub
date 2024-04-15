@@ -30,8 +30,6 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,20 +46,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.example.padelhub.MainActivity
 import com.example.padelhub.R
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.persistencia.GestionPartido
-import com.google.firebase.Firebase
+import com.example.padelhub.ui.utils.DatePicker
+import com.example.padelhub.ui.utils.TimePicker
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

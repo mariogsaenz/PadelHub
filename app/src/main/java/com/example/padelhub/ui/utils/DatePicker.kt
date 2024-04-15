@@ -1,6 +1,6 @@
-package com.example.padelhub.ui.screens
+package com.example.padelhub.ui.utils
 
-import android.app.TimePickerDialog
+import android.app.DatePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
@@ -11,29 +11,30 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import java.time.LocalTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TimePicker(
+fun DatePicker(
     label: String,
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String) -> Unit = {},
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    pattern: String = "HH:mm",
-    is24HourView: Boolean = true,
+    pattern: String = "yyyy-MM-dd",
     modifier: Modifier
 ) {
     val formatter = DateTimeFormatter.ofPattern(pattern)
-    val time = if (value.isNotBlank()) LocalTime.parse(value, formatter) else LocalTime.now()
-    val dialog = TimePickerDialog(
+    val date = if (value.isNotBlank()) LocalDate.parse(value, formatter) else LocalDate.now()
+    val dialog = DatePickerDialog(
         LocalContext.current,
-        { _, hour, minute -> onValueChange(LocalTime.of(hour, minute).toString()) },
-        time.hour,
-        time.minute,
-        is24HourView,
+        { _, year, month, dayOfMonth ->
+            onValueChange(LocalDate.of(year, month + 1, dayOfMonth).toString())
+        },
+        date.year,
+        date.monthValue - 1,
+        date.dayOfMonth,
     )
 
     TextField(
@@ -46,4 +47,3 @@ fun TimePicker(
         keyboardActions = keyboardActions,
     )
 }
-
