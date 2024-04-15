@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PadelHubTheme {
-                AppNavigation()
+                AppNavigation(database)
             }
         }
     }
@@ -112,8 +112,7 @@ class MainActivity : ComponentActivity() {
                         "nombre" to nombre,
                         "edad" to edad
                     )
-                    database.collection("usuario").document(email)
-                        .set(usuario)
+                    database.collection("usuario").add(usuario)
                         .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                         .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                     navController.navigate(route = AppScreens.HomeScreen_Inicio.route)

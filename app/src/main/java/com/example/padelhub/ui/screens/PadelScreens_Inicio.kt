@@ -2,6 +2,7 @@ package com.example.padelhub.ui.screens
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -45,7 +46,11 @@ import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.example.padelhub.MainActivity
 import com.example.padelhub.R
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -90,9 +95,7 @@ fun ContenidoAppInicio(navController: NavController) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CrearPartidoScreen(navController: NavController) {
-    var titulo by remember { mutableStateOf("") }
-    var descripcion by remember { mutableStateOf("") }
+fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore) {
     var fecha by remember { mutableStateOf("") }
     var hora by remember { mutableStateOf("") }
     var ubicacion by remember { mutableStateOf("") }
@@ -103,23 +106,6 @@ fun CrearPartidoScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = titulo,
-                onValueChange = { titulo = it },
-                label = { Text("Título del partido") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-            OutlinedTextField(
-                value = descripcion,
-                onValueChange = { descripcion = it },
-                label = { Text("Descripción del partido") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
             DatePicker(
                 label = "Fecha del partido",
                 value = fecha,
@@ -155,6 +141,15 @@ fun CrearPartidoScreen(navController: NavController) {
             ) {
                 Button(
                     onClick = {
+                        val partido = hashMapOf(
+                            "fecha" to fecha,
+                            "hora" to hora,
+                            "ubicacion" to ubicacion,
+                            "estado" to true
+                        )
+                        database.collection("partido").add(partido)
+                            .addOnSuccessListener { Log.d("Partido", "DocumentSnapshot successfully written!") }
+                            .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
                         navController.navigateUp()
                     },
                     modifier = Modifier.weight(1f)

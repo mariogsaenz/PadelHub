@@ -14,10 +14,11 @@ import com.example.padelhub.ui.screens.HomeScreenChat
 import com.example.padelhub.ui.screens.HomeScreenInicio
 import com.example.padelhub.ui.screens.HomeScreenPerfil
 import com.example.padelhub.ui.screens.HomeScreenPistas
+import com.google.firebase.firestore.FirebaseFirestore
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(){
+fun AppNavigation(database: FirebaseFirestore){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
         composable(route=AppScreens.HomeScreen_Login.route){
@@ -39,7 +40,7 @@ fun AppNavigation(){
             HomeScreenPerfil(navController)
         }
         composable(route=AppScreens.HomeScreen_Inicio_CrearPartido.route){
-            CrearPartidoScreen(navController)
+            CrearPartidoScreen(navController, database)
         }
         composable(route=AppScreens.HomeScreen_Pistas_AnadirPista.route){
             AnadirPistaScreen(navController)
