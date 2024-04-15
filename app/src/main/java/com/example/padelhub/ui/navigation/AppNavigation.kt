@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.padelhub.MainActivity
 import com.example.padelhub.ui.screens.AnadirPistaScreen
 import com.example.padelhub.ui.screens.BuscarPartidosScreen
 import com.example.padelhub.ui.screens.CrearPartidoScreen
@@ -14,18 +13,21 @@ import com.example.padelhub.ui.screens.HomeScreenChat
 import com.example.padelhub.ui.screens.HomeScreenInicio
 import com.example.padelhub.ui.screens.HomeScreenPerfil
 import com.example.padelhub.ui.screens.HomeScreenPistas
+import com.example.padelhub.ui.screens.LoginScreen
+import com.example.padelhub.ui.screens.RegisterScreen
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(database: FirebaseFirestore){
+fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
         composable(route=AppScreens.HomeScreen_Login.route){
-            MainActivity().LoginScreen(navController)
+            LoginScreen(navController, auth)
         }
         composable(route=AppScreens.HomeScreen_Registro.route){
-            MainActivity().RegisterScreen(navController)
+             RegisterScreen(navController, auth, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio.route){
             HomeScreenInicio(navController)
