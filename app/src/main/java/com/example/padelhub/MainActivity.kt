@@ -108,11 +108,11 @@ class MainActivity : ComponentActivity() {
                         Toast.LENGTH_SHORT,
                     ).show()
                     val usuario = hashMapOf(
-                        "nombre" to nombre,
-                        "edad" to edad,
                         "email" to email,
+                        "nombre" to nombre,
+                        "edad" to edad
                     )
-                    database.collection("usuario").document(usuario[email].toString())
+                    database.collection("usuario").document(email)
                         .set(usuario)
                         .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                         .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
