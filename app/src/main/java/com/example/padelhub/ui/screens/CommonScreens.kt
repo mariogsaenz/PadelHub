@@ -36,7 +36,7 @@ import com.example.padelhub.ui.navigation.AppScreens
 @OptIn(ExperimentalMaterial3Api::class)
 fun TopBarApp(){
 
-    TopAppBar(
+    /*TopAppBar(
         title = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -52,9 +52,9 @@ fun TopBarApp(){
             }
         },
         modifier = Modifier.fillMaxWidth()
-    )
+    )*/
 
-    /*TopAppBar(
+    TopAppBar(
         title = { Text(
             text="PADEL HUB",
             modifier = Modifier
@@ -64,7 +64,7 @@ fun TopBarApp(){
         ) },
         modifier = Modifier.fillMaxWidth()
             .background(Color.Blue)
-    )*/
+    )
 }
 
 @Composable

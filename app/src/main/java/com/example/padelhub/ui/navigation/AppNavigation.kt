@@ -30,7 +30,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
              RegisterScreen(navController, auth, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio.route){
-            HomeScreenInicio(navController)
+            HomeScreenInicio(navController,database)
         }
         composable(route=AppScreens.HomeScreen_Pistas.route){
             HomeScreenPistas(navController)

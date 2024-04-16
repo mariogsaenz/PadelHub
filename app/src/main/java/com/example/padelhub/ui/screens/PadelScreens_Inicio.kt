@@ -30,12 +30,14 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -60,40 +62,40 @@ import kotlinx.coroutines.runBlocking
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreenInicio(navController: NavController) {
+fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) {
     Scaffold(
         topBar = { TopBarApp() },
         bottomBar = { BottomNavigation(navController) }
     ) {
-        ContenidoAppInicio(navController)
+        ContenidoAppInicio(navController,database)
     }
 }
 
 @Composable
-fun ContenidoAppInicio(navController: NavController) {
+fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
     Surface(color = verdePadel,
         modifier = Modifier.fillMaxSize()) {
+
         Image(
             painter = backgroundImage,
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
+
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+                .padding(0.dp,120.dp),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Contenido de la pantalla de inicio",
-                color = Color.White
-            )
-            //AQUÍ HABRÁ QUE PONER EL CONTENIDO QUE QUERAMOS MOSTRAR
+            BuscarPartidosScreen(navController,database)
             Button(onClick = { navController.navigate("crear_partido") }) {
-                Text(text = "Crear Partido")
-            }
-            Button(onClick = { navController.navigate("buscar_partidos") }) {
-                Text(text = "Buscar partidos")
+                Icon(
+                    modifier = Modifier.size(30.dp),
+                    painter = painterResource(id = R.drawable.add_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                    contentDescription = "Crear partido"
+                )
             }
         }
     }
@@ -170,7 +172,7 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Crear Partido")
+                    Text("Crear partido")
                 }
                 Button(
                     onClick = { navController.navigateUp() },
@@ -196,8 +198,9 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-                text = "Mi lista de ítems",
+                text = "PARTIDOS DISPONIBLES",
                 style = MaterialTheme.typography.titleLarge,
+                color=Color.White,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start
             )
@@ -213,7 +216,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
                 modifier = Modifier
                     .fillMaxSize()
                     .border(
-                        width = 1.dp,
+                        width = 0.dp,
                         color = Color.LightGray,
                     ),
             ) {
@@ -246,22 +249,22 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
         Column(
         ) {
             Text(
-                text = partido.nombre,
+                text = "Nombre del partido: " + partido.nombre,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = partido.ubicacion,
+                text = "Ubicación: " + partido.ubicacion,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = partido.fecha,
+                text = "Fecha: " + partido.fecha,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = partido.hora,
+                text = "Hora: "+partido.hora,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
