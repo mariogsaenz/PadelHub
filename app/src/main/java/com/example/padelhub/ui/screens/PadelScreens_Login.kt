@@ -19,6 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +28,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +43,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -53,7 +57,9 @@ import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.format.TextStyle
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, auth: FirebaseAuth){
     var email by remember { mutableStateOf("") }
@@ -61,6 +67,7 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
     var showPassword by remember { mutableStateOf(value = false) }
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         Column(
@@ -87,9 +94,13 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                 label = {
                     Text(
                         text = "Correo electrónico",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
+                ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 ),
@@ -105,9 +116,13 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                 label = {
                     Text(
                         text = "Contraseña",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
+                ),
                 visualTransformation = if (showPassword) {
 
                     VisualTransformation.None
@@ -162,17 +177,23 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                         GestionUsuario().signIn(auth, email,password,navController, context = context)
                         //Aquí función para creas el usuario con detalles
                     },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
                     modifier = Modifier.fillMaxWidth()
 
                 ) {
-                    Text("Iniciar sesión")
+                    Text(
+                        "Iniciar sesión",
+                        style = MaterialTheme.typography.labelMedium,
+                    )
                 }
                 ClickableText(
                     text = AnnotatedString("¿Todavía no eres usuario? Regístrate") ,
                     onClick = {
                         navController.navigate(route = AppScreens.HomeScreen_Registro.route)
                     },
-                modifier = Modifier.padding(0.dp, 20.dp))
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(0.dp, 20.dp)
+                )
             }
         }
 
@@ -226,7 +247,8 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
                 label = {
                     Text(
                         text = "Edad",
-                        style = MaterialTheme.typography.labelMedium
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 },
                 keyboardOptions = KeyboardOptions(
@@ -241,6 +263,7 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
                 label = {
                     Text(
                         text = "Correo electrónico",
+                        color = Color(0xFF0097B2),
                         style = MaterialTheme.typography.labelMedium
                     )
                 },
@@ -271,7 +294,7 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
                 label = {
                     Text(
                         text = "Repetir contraseña",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall
                     )
                 },
                 keyboardOptions = KeyboardOptions(
