@@ -75,7 +75,7 @@ fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) 
 
 @Composable
 fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
-    val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
+    val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     Box(modifier = Modifier.fillMaxSize()) {
 
         Image(
