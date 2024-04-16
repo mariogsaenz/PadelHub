@@ -73,7 +73,7 @@ fun HomeScreenPistas(navController: NavController) {
 
 @Composable
 fun ContenidoAppPistas(navController: NavController) {
-    val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
+    val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = backgroundImage,

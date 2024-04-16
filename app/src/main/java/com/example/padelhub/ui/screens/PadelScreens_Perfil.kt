@@ -59,7 +59,7 @@ fun HomeScreenPerfil(navController: NavController) {
 
 @Composable
 fun ContenidoAppPerfil() {
-    val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
+    val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = backgroundImage,
