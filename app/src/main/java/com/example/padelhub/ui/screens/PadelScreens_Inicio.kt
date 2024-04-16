@@ -89,14 +89,34 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            BuscarPartidosScreen(navController,database)
-            Button(onClick = { navController.navigate("crear_partido") }) {
-                Icon(
-                    modifier = Modifier.size(30.dp),
-                    painter = painterResource(id = R.drawable.add_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
-                    contentDescription = "Crear partido"
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = { navController.navigate("crear_partido")},
+                    modifier = Modifier.padding(16.dp)
                 )
+                {
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(id = R.drawable.add_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Crear partido"
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    text = "PARTIDOS DISPONIBLES",
+                    style = MaterialTheme.typography.titleLarge,
+                    color=Color.White,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start
+                )
+
             }
+            BuscarPartidosScreen(navController,database)
         }
     }
 }
@@ -194,7 +214,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
-            Text(
+            /*Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -203,7 +223,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
                 color=Color.White,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start
-            )
+            )*/
         }
         var myList = mutableListOf<Partido>()
         runBlocking {
