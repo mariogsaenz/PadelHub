@@ -49,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -80,6 +81,7 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
         Image(
             painter = backgroundImage,
             contentDescription = null,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.matchParentSize()
         )
 

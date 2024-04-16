@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -63,6 +64,7 @@ fun ContenidoAppChat() {
         Image(
             painter = backgroundImage,
             contentDescription = null,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.matchParentSize()
         )
         Column(
