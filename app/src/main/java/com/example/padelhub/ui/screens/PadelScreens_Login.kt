@@ -9,10 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.padelhub.R
@@ -47,32 +52,51 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                 contentDescription = "Logo",
                 modifier = Modifier.size(300.dp)
             )
+            Spacer(modifier = Modifier.padding(8.dp))
+
             OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Introduce tu correo electrónico") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Contraseña") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                label = {
+                    Text(
+                        text = "Correo electrónico",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                ),
+                singleLine = true
             )
 
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = password,
+                onValueChange = { password = it },
+                label = {
+                    Text(
+                        text = "Contraseña",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                singleLine = true
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
                     onClick = {
                         GestionUsuario().signIn(auth, email,password,navController, context = context)
+                        //Aquí función para creas el usuario con detalles
                     },
                     modifier = Modifier.fillMaxWidth()
 
@@ -158,7 +182,9 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(
-                modifier = androidx.compose.ui.Modifier.fillMaxWidth().padding(16.dp),
+                modifier = androidx.compose.ui.Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
