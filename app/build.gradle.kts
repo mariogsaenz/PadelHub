@@ -67,6 +67,7 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation("androidx.compose.material:material-icons-extended:1.3.1")
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-firestore")
@@ -78,4 +79,5 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 }
