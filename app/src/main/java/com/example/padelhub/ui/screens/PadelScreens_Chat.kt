@@ -59,11 +59,11 @@ fun HomeScreenChat(navController: NavController) {
 @Composable
 fun ContenidoAppChat() {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
-    Surface(color = verdePadel) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = backgroundImage,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.matchParentSize()
         )
         Column(
             modifier = Modifier.fillMaxSize(),

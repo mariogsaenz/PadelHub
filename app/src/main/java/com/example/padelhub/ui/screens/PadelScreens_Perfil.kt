@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,11 +60,12 @@ fun HomeScreenPerfil(navController: NavController) {
 @Composable
 fun ContenidoAppPerfil() {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo4)
-    Surface(color = verdePadel) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = backgroundImage,
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.matchParentSize()
         )
         Column(
             modifier = Modifier.fillMaxSize(),
