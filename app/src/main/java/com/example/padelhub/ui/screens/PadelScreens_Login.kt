@@ -36,6 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -49,6 +51,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -192,7 +195,18 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                         navController.navigate(route = AppScreens.HomeScreen_Registro.route)
                     },
                     style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(0.dp, 20.dp)
+                    modifier = Modifier
+                        .padding(0.dp, 20.dp)
+                        .drawBehind {
+                            val strokeWidthPx = 1.dp.toPx()
+                            val verticalOffset = size.height - 2.sp.toPx()
+                            drawLine(
+                                color = Color.Black,
+                                strokeWidth = strokeWidthPx,
+                                start = Offset(0f, verticalOffset),
+                                end = Offset(size.width, verticalOffset)
+                            )
+                        },
                 )
             }
         }
@@ -201,6 +215,7 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: FirebaseFirestore){
 
@@ -209,97 +224,203 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var password2 by remember { mutableStateOf("") }
+    var showPassword by remember { mutableStateOf(value = false) }
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     //demáss datos que queramos guardar del usuario
 
-    Surface(color = Color.White) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(16.dp, 0.dp),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.logo_padelhub2),
+                painter = painterResource(id = R.drawable.pade_logo),
                 contentDescription = "Logo",
-                modifier = Modifier.size(200.dp)
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(175.dp)
+                    .padding(0.dp, 0.dp)
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp),
                 value = nombre,
                 onValueChange = { nombre = it },
                 label = {
                     Text(
                         text = "Nombre",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
+                ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 ),
+                shape = RoundedCornerShape(percent = 20),
                 singleLine = true
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp),
                 value = edad,
                 onValueChange = { edad = it },
                 label = {
                     Text(
                         text = "Edad",
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
+                ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 ),
+                shape = RoundedCornerShape(percent = 20),
                 singleLine = true
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp),
                 value = email,
                 onValueChange = { email = it },
                 label = {
                     Text(
                         text = "Correo electrónico",
-                        color = Color(0xFF0097B2),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
+                ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 ),
+                shape = RoundedCornerShape(percent = 20),
                 singleLine = true
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp),
                 value = password,
                 onValueChange = { password = it },
                 label = {
                     Text(
                         text = "Contraseña",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
                 ),
+                visualTransformation = if (showPassword) {
+
+                    VisualTransformation.None
+
+                } else {
+
+                    PasswordVisualTransformation()
+
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    autoCorrect = true,
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
+                trailingIcon = {
+                    if (showPassword) {
+                        IconButton(onClick = { showPassword = false }) {
+                            Icon(
+                                imageVector = Icons.Filled.Visibility,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = { showPassword = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.VisibilityOff,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    }
+                },
+                shape = RoundedCornerShape(percent = 20),
                 singleLine = true
             )
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(3.dp),
                 value = password2,
                 onValueChange = { password2 = it },
                 label = {
                     Text(
                         text = "Repetir contraseña",
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
                     )
                 },
-                keyboardOptions = KeyboardOptions(
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color(0xFF00272B),
+                    unfocusedBorderColor = Color(0xFF005D72),
+                ),
+                visualTransformation = if (showPassword) {
+
+                    VisualTransformation.None
+
+                } else {
+
+                    PasswordVisualTransformation()
+
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    autoCorrect = true,
+                    keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
+                trailingIcon = {
+                    if (showPassword) {
+                        IconButton(onClick = { showPassword = false }) {
+                            Icon(
+                                imageVector = Icons.Filled.Visibility,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            onClick = { showPassword = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.VisibilityOff,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    }
+                },
+                shape = RoundedCornerShape(percent = 20),
                 singleLine = true
             )
 
@@ -308,29 +429,43 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(30.dp),
-                verticalArrangement = Arrangement.Center
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    //Aquí habría que llamar a los métodos de registro en la base de datos
-                    //pasandole los parámetros recogidos en los textfield
-                    //Dependiendo de si se ha podido registrar al usuario o no navegaremos a una pantalla u otra
-                    //createAccount(email,password)
                     onClick = {
                         GestionUsuario().createAccount(auth, database, nombre, edad.toInt(), email, password, navController, context)
+                        //Aquí función para creas el usuario con detalles
                     },
-                    modifier = androidx.compose.ui.Modifier.fillMaxWidth()
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
+                    modifier = Modifier.fillMaxWidth()
+
                 ) {
-                    Text("Registrarme")
+                    Text(
+                        "Registrarme",
+                        style = MaterialTheme.typography.labelMedium,
+                    )
                 }
-                Button(
+                ClickableText(
+                    text = AnnotatedString("Volver a inicio de sesión"),
                     onClick = {
                         navController.navigate(route = AppScreens.HomeScreen_Login.route)
                     },
-                    modifier = androidx.compose.ui.Modifier.fillMaxWidth()
-                ) {
-                    Text("Volver a inicio de sesión")
-                }
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier
+                        .padding(0.dp, 20.dp)
+                        .drawBehind {
+                            val strokeWidthPx = 1.dp.toPx()
+                            val verticalOffset = size.height - 2.sp.toPx()
+                            drawLine(
+                                color = Color.Black,
+                                strokeWidth = strokeWidthPx,
+                                start = Offset(0f, verticalOffset),
+                                end = Offset(size.width, verticalOffset)
+                            )
+                        },
+                )
             }
         }
     }
