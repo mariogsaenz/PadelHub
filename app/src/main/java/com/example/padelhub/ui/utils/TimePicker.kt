@@ -4,16 +4,22 @@ import android.app.TimePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TimePicker(
@@ -36,7 +42,7 @@ fun TimePicker(
         is24HourView,
     )
 
-    TextField(
+    OutlinedTextField(
         label = { Text(label) },
         value = value,
         onValueChange = onValueChange,
@@ -44,6 +50,11 @@ fun TimePicker(
         modifier = Modifier.clickable { dialog.show() },
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color(0xFF00272B),
+            unfocusedBorderColor = Color(0xFF005D72),
+        ),
+        shape = RoundedCornerShape(percent = 20),
     )
 }
 

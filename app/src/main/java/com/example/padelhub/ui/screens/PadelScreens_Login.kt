@@ -58,6 +58,7 @@ import androidx.navigation.NavController
 import com.example.padelhub.R
 import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
+import com.example.padelhub.ui.utils.CustomOutlinedTextField
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.format.TextStyle
@@ -88,84 +89,9 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                     .size(275.dp)
                     .padding(0.dp, 0.dp)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 5.dp),
-                value = email,
-                onValueChange = { email = it },
-                label = {
-                    Text(
-                        text = "Correo electrónico",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
-                label = {
-                    Text(
-                        text = "Contraseña",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                visualTransformation = if (showPassword) {
-
-                    VisualTransformation.None
-
-                } else {
-
-                    PasswordVisualTransformation()
-
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    autoCorrect = true,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
-                ),
-                trailingIcon = {
-                    if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = "hide_password"
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = { showPassword = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = "hide_password"
-                            )
-                        }
-                    }
-                },
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
+            CustomOutlinedTextField(value = email, onValueChange = {email = it}, label = "Correo electronico")
+            CustomOutlinedTextField(value = password, onValueChange = {password = it}, label = "Contraseña",
+                imeAction = ImeAction.Done, typePassword = true)
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(
@@ -215,7 +141,6 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: FirebaseFirestore){
 
@@ -224,9 +149,7 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var password2 by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(value = false) }
     val context = LocalContext.current
-    val focusManager = LocalFocusManager.current
     //demáss datos que queramos guardar del usuario
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -245,184 +168,13 @@ fun RegisterScreen(navController: NavController, auth: FirebaseAuth, database: F
                     .size(175.dp)
                     .padding(0.dp, 0.dp)
             )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(3.dp),
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = {
-                    Text(
-                        text = "Nombre",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(3.dp),
-                value = edad,
-                onValueChange = { edad = it },
-                label = {
-                    Text(
-                        text = "Edad",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(3.dp),
-                value = email,
-                onValueChange = { email = it },
-                label = {
-                    Text(
-                        text = "Correo electrónico",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(3.dp),
-                value = password,
-                onValueChange = { password = it },
-                label = {
-                    Text(
-                        text = "Contraseña",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                visualTransformation = if (showPassword) {
-
-                    VisualTransformation.None
-
-                } else {
-
-                    PasswordVisualTransformation()
-
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    autoCorrect = true,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
-                ),
-                trailingIcon = {
-                    if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = "hide_password"
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = { showPassword = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = "hide_password"
-                            )
-                        }
-                    }
-                },
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(3.dp),
-                value = password2,
-                onValueChange = { password2 = it },
-                label = {
-                    Text(
-                        text = "Repetir contraseña",
-                        style = MaterialTheme.typography.labelSmall,
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF00272B),
-                    unfocusedBorderColor = Color(0xFF005D72),
-                ),
-                visualTransformation = if (showPassword) {
-
-                    VisualTransformation.None
-
-                } else {
-
-                    PasswordVisualTransformation()
-
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    autoCorrect = true,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
-                ),
-                trailingIcon = {
-                    if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = "hide_password"
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            onClick = { showPassword = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = "hide_password"
-                            )
-                        }
-                    }
-                },
-                shape = RoundedCornerShape(percent = 20),
-                singleLine = true
-            )
+            CustomOutlinedTextField(value = nombre, onValueChange = {nombre = it}, label = "Nombre")
+            CustomOutlinedTextField(value = edad, onValueChange = {edad = it}, label = "Edad")
+            CustomOutlinedTextField(value = email, onValueChange = {email = it}, label = "Correo electronico")
+            CustomOutlinedTextField(value = password, onValueChange = {password = it}, label = "Contraseña",
+                typePassword = true)
+            CustomOutlinedTextField(value = password2, onValueChange = {password2 = it}, label = "Repetir contraseña",
+                imeAction = ImeAction.Done, typePassword = true)
 
             Spacer(modifier = Modifier.height(16.dp))
 

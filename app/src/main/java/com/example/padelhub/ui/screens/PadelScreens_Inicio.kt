@@ -60,11 +60,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import com.example.padelhub.R
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.persistencia.GestionPartido
+import com.example.padelhub.ui.utils.CustomOutlinedTextField
 import com.example.padelhub.ui.utils.DatePicker
 import com.example.padelhub.ui.utils.TimePicker
 import com.google.firebase.firestore.FirebaseFirestore
@@ -148,14 +150,9 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre del partido") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+            CustomOutlinedTextField(value = nombre, onValueChange = {nombre = it},
+                label = "Nombre del partido")
+
             DatePicker(
                 label = "Fecha del partido",
                 value = fecha,
@@ -174,14 +171,8 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
-            OutlinedTextField(
-                value = ubicacion,
-                onValueChange = { ubicacion = it },
-                label = { Text("Ubicación del partido") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+            CustomOutlinedTextField(value = ubicacion, onValueChange = {ubicacion = it},
+                imeAction = ImeAction.Done, label = "Ubicación del partido")
 
             Spacer(modifier = Modifier.height(16.dp))
 
