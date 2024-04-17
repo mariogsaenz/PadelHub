@@ -80,6 +80,17 @@ class GestionUsuario {
         // [END sign_in_with_email]
     }
 
+    internal fun signOut(auth: FirebaseAuth, navController: NavController, context: Context) {
+        auth.signOut()
+        Toast.makeText(
+            context,
+            "Te has deslogueado con exito.",
+            Toast.LENGTH_SHORT,
+        ).show()
+        navController.navigate(route = AppScreens.HomeScreen_Login.route)
+        // [END sign_in_with_email]
+    }
+
     private fun updateUI(user: FirebaseUser?) {
     }
 }

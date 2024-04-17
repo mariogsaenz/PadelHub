@@ -28,10 +28,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
@@ -39,27 +41,32 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.padelhub.R
+import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.theme.verdePadel
+import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreenPerfil(navController: NavController) {
+fun HomeScreenPerfil(navController: NavController, auth: FirebaseAuth) {
     Scaffold(
         topBar = { TopBarApp() },
         bottomBar = { BottomNavigation(navController) }
     ) {
-        ContenidoAppPerfil()
+        ContenidoAppPerfil(navController, auth)
     }
 }
 
 @Composable
-fun ContenidoAppPerfil() {
+fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
+    val context = LocalContext.current
+
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = backgroundImage,
@@ -76,7 +83,19 @@ fun ContenidoAppPerfil() {
                 text = "Contenido de la pantalla de perfil",
                 color = Color.White
             )
-            //AQUÍ HABRÁ QUE PONER EL CONTENIDO QUE QUERAMOS MOSTRAR
+            Button(
+                onClick = {
+                    GestionUsuario().signOut(auth, navController, context)
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
+                modifier = Modifier.fillMaxWidth()
+
+            ) {
+                Text(
+                    "Cerrar sesión",
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
         }
     }
 }
