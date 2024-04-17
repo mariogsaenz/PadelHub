@@ -22,11 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.padelhub.R
 import com.example.padelhub.ui.navigation.AppScreens
@@ -54,16 +56,28 @@ fun TopBarApp(){
         modifier = Modifier.fillMaxWidth()
     )*/
 
+    val colorGradiente = Brush.horizontalGradient(
+        colors = listOf(Color(0xFF005D72),Color(0xFF7ED957)),
+    )
     TopAppBar(
-        title = { Text(
-            text="PADEL HUB",
-            modifier = Modifier
-                .fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
-        ) },
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Absolute.Left,
+                modifier = Modifier.fillMaxSize()
+                    .background(colorGradiente)
+            ){
+                Text(
+                    text="PADEL HUB",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold, fontSize = 24.sp,fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = Color.White
+                )
+            }
+        },
         modifier = Modifier.fillMaxWidth()
-            .background(Color.Blue)
     )
 }
 

@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,8 +50,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -80,6 +84,8 @@ fun ContenidoAppPistas(navController: NavController) {
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.matchParentSize()
+                .blur(radiusX = 8.dp, radiusY = 8.dp),
+            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
         )
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -91,7 +97,10 @@ fun ContenidoAppPistas(navController: NavController) {
                 color = Color.White
             )
             //AQUÍ HABRÁ QUE PONER EL CONTENIDO QUE QUERAMOS MOSTRAR
-            Button(onClick = { navController.navigate("anadir_pista") }) {
+            Button(
+                onClick = { navController.navigate("anadir_pista") },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
+            ){
                 Text(text = "Añadir una pista")
             }
         }

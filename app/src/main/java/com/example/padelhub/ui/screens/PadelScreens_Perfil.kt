@@ -37,8 +37,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -73,6 +76,8 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth) {
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.matchParentSize()
+                .blur(radiusX = 8.dp, radiusY = 8.dp),
+            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
         )
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -89,6 +94,7 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth) {
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
                 modifier = Modifier.fillMaxWidth()
+                    .padding(8.dp)
 
             ) {
                 Text(

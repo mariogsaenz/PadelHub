@@ -36,6 +36,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -47,7 +48,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import com.example.padelhub.ui.theme.verdePadel
@@ -86,6 +91,8 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.matchParentSize()
+                .blur(radiusX = 8.dp, radiusY = 8.dp),
+            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
         )
 
         Column(
@@ -100,7 +107,8 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
             ) {
                 Button(
                     onClick = { navController.navigate("crear_partido")},
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
                 )
                 {
                     Icon(
@@ -115,7 +123,7 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                         .padding(8.dp),
                     text = "PARTIDOS DISPONIBLES",
                     style = MaterialTheme.typography.titleLarge,
-                    color=Color.White,
+                    color=Color.Black,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 )
@@ -318,7 +326,8 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                 Button(
                     onClick = {database.collection("partido").get()},
                     modifier = Modifier.padding(8.dp)
-                        .align(Alignment.End)
+                        .align(Alignment.End),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
                 ){
                     Text("Unirse al partido")
                 }
