@@ -52,8 +52,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import com.example.padelhub.R
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.persistencia.GestionPartido
@@ -269,31 +272,54 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
             })
     ) {
         Column(
+            modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = "Nombre del partido: " + partido.nombre,
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Nombre del partido: ")
+                    }
+                    append(partido.nombre)
+                },
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "Ubicación: " + partido.ubicacion,
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Ubicación: ")
+                    }
+                    append(partido.ubicacion)
+                },
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "Fecha: " + partido.fecha,
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Fecha: ")
+                    }
+                    append(partido.fecha)
+                },
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             Text(
-                text = "Hora: "+partido.hora,
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Hora: ")
+                    }
+                    append(partido.hora)
+                },
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(8.dp)
             )
             if (expanded) {
-                Button(onClick = {
-                    database.collection("partido").get()
-                }) {
+                Button(
+                    onClick = {database.collection("partido").get()},
+                    modifier = Modifier.padding(8.dp)
+                        .align(Alignment.End)
+                ){
                     Text("Unirse al partido")
                 }
             }
