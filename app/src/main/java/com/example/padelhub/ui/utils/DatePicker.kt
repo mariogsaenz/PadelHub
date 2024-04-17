@@ -50,8 +50,8 @@ fun DatePicker(
         enabled = false,
         modifier = Modifier.clickable { dialog.show() },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF00272B),
-            unfocusedBorderColor = Color(0xFF005D72),
+            disabledBorderColor = Color(0xFF00272B),
+            disabledLabelColor = Color(0xFF00272B),
         ),
         shape = RoundedCornerShape(percent = 20),
         keyboardOptions = keyboardOptions,

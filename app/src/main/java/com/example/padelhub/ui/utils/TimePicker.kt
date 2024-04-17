@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.VisualTransformation
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -51,10 +52,10 @@ fun TimePicker(
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF00272B),
-            unfocusedBorderColor = Color(0xFF005D72),
+            disabledBorderColor = Color(0xFF00272B),
+            disabledLabelColor = Color(0xFF00272B),
         ),
-        shape = RoundedCornerShape(percent = 20),
+        shape = RoundedCornerShape(percent = 20)
     )
 }
 
