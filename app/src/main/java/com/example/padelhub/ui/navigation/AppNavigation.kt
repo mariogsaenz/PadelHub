@@ -53,3 +53,4 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
 
     }
 }
+

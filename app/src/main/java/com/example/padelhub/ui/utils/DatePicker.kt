@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -48,7 +49,8 @@ fun DatePicker(
         value = value,
         onValueChange = onValueChange,
         enabled = false,
-        modifier = Modifier.clickable { dialog.show() },
+        modifier = Modifier.clickable { dialog.show() }
+            .fillMaxWidth(),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             disabledBorderColor = Color(0xFF00272B),
             disabledLabelColor = Color(0xFF00272B),
@@ -58,3 +60,4 @@ fun DatePicker(
         keyboardActions = keyboardActions,
     )
 }
+

@@ -106,5 +106,3 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth) {
     }
 }
 
-
-

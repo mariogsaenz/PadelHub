@@ -11,3 +11,4 @@ sealed class AppScreens(val route: String) {
     object HomeScreen_Pistas_AnadirPista: AppScreens("anadir_pista")
     object HomeScreen_Inicio_BuscarPartidos: AppScreens("buscar_partidos")
 }
+

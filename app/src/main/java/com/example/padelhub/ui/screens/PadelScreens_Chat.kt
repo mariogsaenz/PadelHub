@@ -87,5 +87,3 @@ fun ContenidoAppChat() {
 }
 
 
-
-

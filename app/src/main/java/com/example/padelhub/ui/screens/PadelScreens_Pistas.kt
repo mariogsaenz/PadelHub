@@ -161,7 +161,8 @@ fun AnadirPistaScreen(navController: NavController, database: FirebaseFirestore)
 
     Surface(color = Color.White) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -175,7 +176,7 @@ fun AnadirPistaScreen(navController: NavController, database: FirebaseFirestore)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(20.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -336,6 +337,4 @@ fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
         }
     }
 }
-
-
 

@@ -7,3 +7,4 @@ data class Pista(
     val numeroPistas: String,
     val precio: String
 )
+

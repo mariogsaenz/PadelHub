@@ -8,3 +8,4 @@ data class Partido(
     val ubicacion: String,
     val estado: Boolean
 )
+

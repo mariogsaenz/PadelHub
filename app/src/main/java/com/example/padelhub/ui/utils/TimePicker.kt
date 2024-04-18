@@ -4,6 +4,7 @@ import android.app.TimePickerDialog
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -48,7 +49,8 @@ fun TimePicker(
         value = value,
         onValueChange = onValueChange,
         enabled = false,
-        modifier = Modifier.clickable { dialog.show() },
+        modifier = Modifier.clickable { dialog.show() }
+            .fillMaxWidth(),
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -58,4 +60,3 @@ fun TimePicker(
         shape = RoundedCornerShape(percent = 20)
     )
 }
-

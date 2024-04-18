@@ -32,3 +32,4 @@ class GestionPartido {
         return myList
     }
 }
+
