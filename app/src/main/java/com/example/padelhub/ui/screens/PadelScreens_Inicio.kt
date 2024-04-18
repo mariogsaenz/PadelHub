@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -35,6 +36,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -49,6 +51,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -57,15 +61,18 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 import com.example.padelhub.R
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.persistencia.GestionPartido
+import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.utils.CustomOutlinedTextField
 import com.example.padelhub.ui.utils.DatePicker
 import com.example.padelhub.ui.utils.TimePicker
@@ -146,12 +153,12 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
 
     Surface(color = Color.White) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
+                .padding(8.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CustomOutlinedTextField(value = nombre, onValueChange = {nombre = it},
-                label = "Nombre del partido")
+            CustomOutlinedTextField(value = nombre, onValueChange = {nombre = it}, label = "Nombre del partido")
 
             DatePicker(
                 label = "Fecha del partido",
@@ -159,7 +166,7 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                 onValueChange = { fecha = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(8.dp)
             )
 
             TimePicker(
@@ -168,17 +175,19 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                 onValueChange = { hora = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(8.dp)
             )
 
-            CustomOutlinedTextField(value = ubicacion, onValueChange = {ubicacion = it},
-                imeAction = ImeAction.Done, label = "Ubicación del partido")
+            CustomOutlinedTextField(value = ubicacion, onValueChange = {ubicacion = it}, imeAction = ImeAction.Done, label = "Ubicación del partido")
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(
                     onClick = {
@@ -194,16 +203,28 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                             .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
                         navController.navigateUp()
                     },
-                    modifier = Modifier.weight(1f)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Crear partido")
                 }
-                Button(
+                ClickableText(
+                    text = AnnotatedString("Cancelar") ,
                     onClick = { navController.navigateUp() },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Cancelar")
-                }
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier
+                        .padding(0.dp, 10.dp)
+                        .drawBehind {
+                            val strokeWidthPx = 1.dp.toPx()
+                            val verticalOffset = size.height - 2.sp.toPx()
+                            drawLine(
+                                color = Color.Black,
+                                strokeWidth = strokeWidthPx,
+                                start = Offset(0f, verticalOffset),
+                                end = Offset(size.width, verticalOffset)
+                            )
+                        },
+                )
             }
         }
     }

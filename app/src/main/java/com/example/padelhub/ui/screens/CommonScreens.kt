@@ -61,21 +61,14 @@ fun TopBarApp(){
     )
     TopAppBar(
         title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.Left,
-                modifier = Modifier.fillMaxSize()
-                    .background(colorGradiente)
-            ){
-                Text(
-                    text="PADEL HUB",
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold, fontSize = 24.sp,fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
-                    color = Color.White
-                )
-            }
+            Text(
+                text="PADEL HUB",
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = LocalTextStyle.current.copy(fontWeight = FontWeight.Bold, fontSize = 24.sp,fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                color = Color.Black
+            )
         },
         modifier = Modifier.fillMaxWidth()
     )

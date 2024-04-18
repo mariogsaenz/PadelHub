@@ -33,7 +33,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             HomeScreenInicio(navController,database)
         }
         composable(route=AppScreens.HomeScreen_Pistas.route){
-            HomeScreenPistas(navController)
+            HomeScreenPistas(navController,database)
         }
         composable(route=AppScreens.HomeScreen_Chat.route){
             HomeScreenChat(navController)
@@ -45,7 +45,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             CrearPartidoScreen(navController, database)
         }
         composable(route=AppScreens.HomeScreen_Pistas_AnadirPista.route){
-            AnadirPistaScreen(navController)
+            AnadirPistaScreen(navController, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio_BuscarPartidos.route){
             BuscarPartidosScreen(navController, database)
