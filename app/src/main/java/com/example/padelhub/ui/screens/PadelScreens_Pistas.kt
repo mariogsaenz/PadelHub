@@ -106,13 +106,16 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     Box(modifier = Modifier
         .fillMaxSize()
-        .padding(vertical = 10.dp)
+        .paint(
+            // Replace with your image id
+            painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillBounds)
     ) {
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(0.dp, 20.dp),
+                .padding(0.dp, 50.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -129,7 +132,7 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
                         .padding(8.dp),
                     text = "Pistas",
                     style = MaterialTheme.typography.titleLarge,
-                    color=Color.Black,
+                    color=Color.White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 )

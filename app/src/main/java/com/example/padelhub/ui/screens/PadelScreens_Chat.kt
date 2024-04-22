@@ -37,6 +37,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -53,7 +54,6 @@ import com.example.padelhub.ui.theme.verdePadel
 @Composable
 fun HomeScreenChat(navController: NavController) {
     Scaffold(
-        topBar = { TopBarApp() },
         bottomBar = { BottomNavigation(navController) }
     ) {
         ContenidoAppChat()
@@ -63,15 +63,13 @@ fun HomeScreenChat(navController: NavController) {
 @Composable
 fun ContenidoAppChat() {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = backgroundImage,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-                .blur(radiusX = 8.dp, radiusY = 8.dp),
-            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
-        )
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .paint(
+            // Replace with your image id
+            painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillBounds)
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

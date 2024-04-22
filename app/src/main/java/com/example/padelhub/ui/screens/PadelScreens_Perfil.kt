@@ -39,6 +39,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -58,7 +59,6 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun HomeScreenPerfil(navController: NavController, auth: FirebaseAuth) {
     Scaffold(
-        topBar = { TopBarApp() },
         bottomBar = { BottomNavigation(navController) }
     ) {
         ContenidoAppPerfil(navController, auth)
@@ -70,15 +70,15 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = backgroundImage,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-                .blur(radiusX = 8.dp, radiusY = 8.dp),
-            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .paint(
+            // Replace with your image id
+            painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillBounds)
+    ) {
+
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,

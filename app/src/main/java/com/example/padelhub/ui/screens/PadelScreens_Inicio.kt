@@ -5,6 +5,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -58,11 +59,14 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import com.example.padelhub.ui.theme.verdePadel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -72,6 +76,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.padelhub.R
@@ -100,13 +105,22 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .padding(vertical = 10.dp)
+        .paint(
+            // Replace with your image id
+            painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillBounds)
     ) {
-
+        Image(
+            painter = backgroundImage,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .matchParentSize(),
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(0.dp, 20.dp),
+                .padding(0.dp, 50.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -123,7 +137,7 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                         .padding(8.dp),
                     text = "Partidos",
                     style = MaterialTheme.typography.titleLarge,
-                    color=Color.Black,
+                    color=Color.White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 )
@@ -202,7 +216,8 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                             "fecha" to fecha,
                             "hora" to hora,
                             "ubicacion" to ubicacion,
-                            "estado" to true
+                            "estado" to true,
+                            "jugadores" to 1
                         )
                         database.collection("partido").add(partido)
                             .addOnSuccessListener { Log.d("Partido", "DocumentSnapshot successfully written!") }
@@ -278,6 +293,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
                 }
             }
         }
+        item { Spacer(modifier = Modifier.padding(35.dp)) }
     }
 }
 
@@ -286,7 +302,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
 fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
 
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(40.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
         modifier = Modifier
             .fillMaxWidth()
@@ -298,7 +314,9 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.person_24px),
                     contentDescription = "imagenPartido",
@@ -310,14 +328,10 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                 )
 
                 Text(
-                    text = "Creado por:",
+                    text = "1/4",
                     style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
                     color = Color.Black,
-                )
-                Text(
-                    text = "DavidPlayer",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFF599B3D),
                 )
 
             }
@@ -346,34 +360,39 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        modifier = Modifier.size(25.dp),
+                        modifier = Modifier.size(20.dp),
                         painter = painterResource(id = R.drawable.baseline_calendar_month_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
                         contentDescription = "Crear partido"
                     )
                     Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
                         text = partido.fecha,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 13.sp
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 8.dp))
                     Icon(
-                        modifier = Modifier.size(25.dp),
+                        modifier = Modifier.size(20.dp),
                         painter = painterResource(id = R.drawable.baseline_access_alarms_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
                         contentDescription = "Crear partido"
                     )
                     Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
                         text = partido.hora,
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 13.sp
                     )
 
                 }
+                Spacer(modifier = Modifier.padding(vertical = 2.dp))
                 Button(
                     onClick = {database.collection("partido").get()},
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0097B2))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
                 ){
                     Text(
                         "Solicitar unirme",
