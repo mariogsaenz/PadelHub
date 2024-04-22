@@ -144,14 +144,12 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
 
                 Button(
                     onClick = { navController.navigate("crear_partido")},
-                    modifier = Modifier
-                        .padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF599B3D))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 )
                 {
                     Icon(
-                        modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.add_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        modifier = Modifier.size(40.dp),
+                        painter = painterResource(id = R.drawable.baseline_add_circle_outline_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
                         contentDescription = "Crear partido"
                     )
                 }
@@ -224,7 +222,7 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                             .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
                         navController.navigateUp()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00272B)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Crear partido")
@@ -259,18 +257,6 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
         state = rememberLazyListState(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            /*Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                text = "PARTIDOS DISPONIBLES",
-                style = MaterialTheme.typography.titleLarge,
-                color=Color.White,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )*/
-        }
         var myList = mutableListOf<Partido>()
         runBlocking {
             myList = GestionPartido().fetchPartidos(database).toMutableList()
@@ -281,13 +267,8 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxSize()
-                    .border(
-                        width = 0.dp,
-                        color = Color.LightGray,
-                    ),
             ) {
                 Column(
-                    modifier = Modifier.padding(8.dp)
                 ) {
                     ExpandableCard(partido = it, database)
                 }
@@ -306,7 +287,7 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(7.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -347,15 +328,15 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                     style = MaterialTheme.typography.labelMedium,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF599B3D),
+                    color = Color(0xFF00272B),
                 )
                 Text(
                     text = partido.ubicacion,
                     style = MaterialTheme.typography.labelSmall,
                     fontSize = 20.sp,
-                    color = Color(0xFF599B3D),
+                    color = Color(0xFF00272B),
                 )
-                Spacer(modifier = Modifier.padding(vertical = 15.dp))
+                Spacer(modifier = Modifier.padding(vertical = 5.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -392,7 +373,7 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72))
                 ){
                     Text(
                         "Solicitar unirme",

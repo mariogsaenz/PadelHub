@@ -80,7 +80,7 @@ fun BottomNavigation(navController: NavController) {
         color = Color.Transparent
     ) {
         BottomAppBar(
-            containerColor = Color.Transparent, //Color del container
+            containerColor = Color.Black, //Color del container
             contentColor = Color.White, //Color de los iconos
             content = {
                 Row(
