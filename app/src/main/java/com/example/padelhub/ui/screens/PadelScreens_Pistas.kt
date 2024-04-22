@@ -106,32 +106,34 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     Box(modifier = Modifier
         .fillMaxSize()
-        .paint(
-            painterResource(id = R.drawable.fondo),
-            contentScale = ContentScale.FillBounds
-        )
+        .padding(vertical = 10.dp)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.pade_logo),
-            contentDescription = "Logo",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(150.dp)
-                .padding(0.dp, 0.dp)
-        )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(0.dp, 120.dp),
+                .padding(0.dp, 20.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = "Pistas",
+                    style = MaterialTheme.typography.titleLarge,
+                    color=Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start
+                )
+
                 Button(
                     onClick = { navController.navigate("anadir_pista")},
                     modifier = Modifier.padding(16.dp),
@@ -144,16 +146,6 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
                         contentDescription = "Añadir pista"
                     )
                 }
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    text = "PISTAS DISPONIBLES",
-                    style = MaterialTheme.typography.titleLarge,
-                    color=Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Start
-                )
             }
             BuscarPistasScreen(navController,database)
         }

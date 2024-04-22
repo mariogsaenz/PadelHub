@@ -122,7 +122,6 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                 LabeledCheckbox(
                     label = "Remember Me",
                     onCheckChanged = {
-
                     },
                     isChecked = false,
                     modifier = androidx.compose.ui.Modifier

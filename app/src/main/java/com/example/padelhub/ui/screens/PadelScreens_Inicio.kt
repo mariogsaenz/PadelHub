@@ -35,8 +35,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -51,6 +53,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.Offset
@@ -97,38 +100,39 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .paint(
-            painterResource(id = R.drawable.fondo),
-            contentScale = ContentScale.FillBounds
-        )
+        .padding(vertical = 10.dp)
     ) {
-
-
-        Image(
-            painter = painterResource(id = R.drawable.pade_logo),
-            contentDescription = "Logo",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(150.dp)
-                .padding(0.dp, 0.dp)
-        )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(0.dp, 120.dp),
+                .padding(0.dp, 20.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+
+                Text(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    text = "Partidos",
+                    style = MaterialTheme.typography.titleLarge,
+                    color=Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start
+                )
+
                 Button(
                     onClick = { navController.navigate("crear_partido")},
-                    modifier = Modifier.padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
+                    modifier = Modifier
+                        .padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF599B3D))
                 )
                 {
                     Icon(
@@ -137,16 +141,6 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                         contentDescription = "Crear partido"
                     )
                 }
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    text = "PARTIDOS DISPONIBLES",
-                    style = MaterialTheme.typography.titleLarge,
-                    color=Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Start
-                )
 
             }
             BuscarPartidosScreen(navController,database)
@@ -291,70 +285,101 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
 @Composable
 fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
 
-    var expanded by remember { mutableStateOf (false) }
-
     Card(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable(onClick = {
-                expanded = !expanded
-            })
+            .padding(16.dp),
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Nombre del partido: ")
-                    }
-                    append(partido.nombre)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Ubicación: ")
-                    }
-                    append(partido.ubicacion)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Fecha: ")
-                    }
-                    append(partido.fecha)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Hora: ")
-                    }
-                    append(partido.hora)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            if (expanded) {
+            Column {
+                Image(
+                    painter = painterResource(id = R.drawable.person_24px),
+                    contentDescription = "imagenPartido",
+                    modifier = Modifier
+                        .size(75.dp)
+                        .clip(CircleShape)
+                        .padding(vertical = 10.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Text(
+                    text = "Creado por:",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Black,
+                )
+                Text(
+                    text = "DavidPlayer",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF599B3D),
+                )
+
+            }
+
+            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = partido.nombre,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF599B3D),
+                )
+                Text(
+                    text = partido.ubicacion,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color(0xFF599B3D),
+                )
+                Spacer(modifier = Modifier.padding(vertical = 15.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.size(25.dp),
+                        painter = painterResource(id = R.drawable.baseline_calendar_month_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Crear partido"
+                    )
+                    Text(
+                        text = partido.fecha,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                    Icon(
+                        modifier = Modifier.size(25.dp),
+                        painter = painterResource(id = R.drawable.baseline_access_alarms_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Crear partido"
+                    )
+                    Text(
+                        text = partido.hora,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+
+                }
                 Button(
                     onClick = {database.collection("partido").get()},
                     modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.End),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0097B2))
                 ){
-                    Text("Unirse al partido")
+                    Text(
+                        "Solicitar unirme",
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                    )
                 }
             }
         }
