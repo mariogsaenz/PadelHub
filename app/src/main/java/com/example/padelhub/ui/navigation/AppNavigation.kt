@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
+    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Inicio.route){
         composable(route=AppScreens.HomeScreen_Login.route){
             LoginScreen(navController, auth)
         }

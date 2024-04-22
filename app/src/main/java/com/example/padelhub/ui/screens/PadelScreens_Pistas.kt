@@ -64,6 +64,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
@@ -94,7 +95,6 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun HomeScreenPistas(navController: NavController, database: FirebaseFirestore) {
     Scaffold(
-        topBar = { TopBarApp() },
         bottomBar = { BottomNavigation(navController) }
     ) {
         ContenidoAppPistas(navController,database)
@@ -104,18 +104,27 @@ fun HomeScreenPistas(navController: NavController, database: FirebaseFirestore) 
 @Composable
 fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = backgroundImage,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-                .blur(radiusX = 8.dp, radiusY = 8.dp),
-            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .paint(
+            painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillBounds
         )
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.pade_logo),
+            contentDescription = "Logo",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(150.dp)
+                .padding(0.dp, 0.dp)
+        )
+
         Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(0.dp,120.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp, 120.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -161,7 +170,8 @@ fun AnadirPistaScreen(navController: NavController, database: FirebaseFirestore)
 
     Surface(color = Color.White) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -327,7 +337,8 @@ fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
             if (expanded) {
                 Button(
                     onClick = {database.collection("pista").get()},
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier
+                        .padding(8.dp)
                         .align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
                 ){

@@ -2,9 +2,11 @@ package com.example.padelhub.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,6 +62,7 @@ import com.example.padelhub.R
 import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.utils.CustomOutlinedTextField
+import com.example.padelhub.ui.utils.LabeledCheckbox
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.format.TextStyle
@@ -115,6 +119,14 @@ fun LoginScreen(navController: NavController, auth: FirebaseAuth){
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }
+                LabeledCheckbox(
+                    label = "Remember Me",
+                    onCheckChanged = {
+
+                    },
+                    isChecked = false,
+                    modifier = androidx.compose.ui.Modifier
+                )
                 ClickableText(
                     text = AnnotatedString("¿Todavía no eres usuario? Regístrate") ,
                     onClick = {

@@ -52,6 +52,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
@@ -69,6 +70,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.padelhub.R
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.persistencia.GestionPartido
@@ -83,7 +85,6 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) {
     Scaffold(
-        topBar = { TopBarApp() },
         bottomBar = { BottomNavigation(navController) }
     ) {
         ContenidoAppInicio(navController,database)
@@ -93,20 +94,30 @@ fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) 
 @Composable
 fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
-    Box(modifier = Modifier.fillMaxSize()) {
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .paint(
+            painterResource(id = R.drawable.fondo),
+            contentScale = ContentScale.FillBounds
+        )
+    ) {
+
 
         Image(
-            painter = backgroundImage,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.matchParentSize()
-                .blur(radiusX = 8.dp, radiusY = 8.dp),
-            colorFilter = ColorFilter.tint(Color.Gray.copy(alpha = 0.7f), BlendMode.DstIn),
+            painter = painterResource(id = R.drawable.pade_logo),
+            contentDescription = "Logo",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(150.dp)
+                .padding(0.dp, 0.dp)
         )
 
         Column(
-            modifier = Modifier.fillMaxSize()
-                .padding(0.dp,120.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp, 120.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -153,7 +164,8 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
 
     Surface(color = Color.White) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -337,7 +349,8 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
             if (expanded) {
                 Button(
                     onClick = {database.collection("partido").get()},
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier
+                        .padding(8.dp)
                         .align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
                 ){
