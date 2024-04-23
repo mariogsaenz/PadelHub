@@ -41,6 +41,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.BottomAppBar
@@ -111,7 +112,13 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
             painterResource(id = R.drawable.fondo),
             contentScale = ContentScale.FillBounds)
     ) {
-
+        Image(
+            painter = backgroundImage,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .matchParentSize(),
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -138,14 +145,13 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
                 )
 
                 Button(
-                    onClick = { navController.navigate("anadir_pista")},
-                    modifier = Modifier.padding(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
+                    onClick = { navController.navigate("crear_partido")},
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 )
                 {
                     Icon(
-                        modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.add_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        modifier = Modifier.size(40.dp),
+                        painter = painterResource(id = R.drawable.baseline_add_circle_outline_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
                         contentDescription = "Añadir pista"
                     )
                 }
@@ -198,7 +204,7 @@ fun AnadirPistaScreen(navController: NavController, database: FirebaseFirestore)
                             .addOnFailureListener { e -> Log.w("Pista", "Error writing document", e) }
                         navController.navigateUp()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00272B)),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Añadir pistas")
@@ -234,18 +240,6 @@ fun BuscarPistasScreen(navController: NavController, database: FirebaseFirestore
         state = rememberLazyListState(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item {
-            /*Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                text = "PISTAS DISPONIBLES",
-                style = MaterialTheme.typography.titleLarge,
-                color=Color.White,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Start
-            )*/
-        }
         var myList = mutableListOf<Pista>()
         runBlocking {
             myList = GestionPista().fetchPistas(database).toMutableList()
@@ -256,18 +250,14 @@ fun BuscarPistasScreen(navController: NavController, database: FirebaseFirestore
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxSize()
-                    .border(
-                        width = 0.dp,
-                        color = Color.LightGray,
-                    ),
             ) {
                 Column(
-                    modifier = Modifier.padding(8.dp)
                 ) {
                     ExpandableCard(pista = it, database)
                 }
             }
         }
+        item { Spacer(modifier = Modifier.padding(35.dp)) }
     }
 }
 
@@ -277,65 +267,78 @@ fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
     var expanded by remember { mutableStateOf (false) }
 
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(40.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
-            .clickable(onClick = {
-                expanded = !expanded
-            })
+            .padding(7.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Nombre de la pista: ")
-                    }
-                    append(pista.nombre)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Ubicación: ")
-                    }
-                    append(pista.ubicacion)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Número de pistas: ")
-                    }
-                    append(pista.numeroPistas)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Precio: ")
-                    }
-                    append(pista.precio)
-                },
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(8.dp)
-            )
-            if (expanded) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.person_24px),
+                    contentDescription = "imagenPartido",
+                    modifier = Modifier
+                        .size(75.dp)
+                        .clip(CircleShape)
+                        .padding(vertical = 10.dp),
+                    contentScale = ContentScale.Fit
+                )
+                Text(
+                    text = pista.precio + "€",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                )
+            }
+            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = pista.nombre,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF00272B),
+                )
+                Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.ubicacion_logo),
+                        contentDescription = "Ubicación pista"
+                    )
+                    Text(
+                        text = pista.ubicacion,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+                }
+                Spacer(modifier = Modifier.padding(vertical = 2.dp))
+                Text(
+                    text = pista.numeroPistas + " pistas disponibles",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 13.sp
+                )
+                Spacer(modifier = Modifier.padding(vertical = 2.dp))
                 Button(
                     onClick = {database.collection("pista").get()},
                     modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.End),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7ED957))
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72))
                 ){
                     Text("Contactar con la pista")
                 }

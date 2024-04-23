@@ -39,7 +39,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             HomeScreenChat(navController)
         }
         composable(route=AppScreens.HomeScreen_Perfil.route){
-            HomeScreenPerfil(navController, auth)
+            HomeScreenPerfil(navController, auth, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio_CrearPartido.route){
             CrearPartidoScreen(navController, database, auth)

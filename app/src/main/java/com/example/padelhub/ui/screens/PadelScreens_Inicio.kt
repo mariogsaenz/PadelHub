@@ -105,6 +105,7 @@ fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) 
 @Composable
 fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
+    var filtroBusqueda by remember { mutableStateOf("") }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -157,6 +158,27 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                     )
                 }
 
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomOutlinedTextField(value = filtroBusqueda, onValueChange = {filtroBusqueda = it}, imeAction = ImeAction.Done, label = "Nombre del partido")
+                Button(
+                    //AQUI HABRÁ QUE LLAMAR AL MÉTODO DE PERSISTENCIA QUE DEVUELVA LOS PARTIDOS CON ESE NOMBRE
+                    onClick = {/*TODO*/},
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00272B)),
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.buscar_logo),
+                        contentDescription = "Ubicación pista"
+                    )
+                }
             }
             BuscarPartidosScreen(navController,database)
         }
@@ -355,7 +377,7 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                     Icon(
                         modifier = Modifier.size(20.dp),
                         painter = painterResource(id = R.drawable.baseline_calendar_month_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
-                        contentDescription = "Crear partido"
+                        contentDescription = "Fecha partido"
                     )
                     Text(
                         modifier = Modifier
@@ -368,7 +390,7 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                     Icon(
                         modifier = Modifier.size(20.dp),
                         painter = painterResource(id = R.drawable.baseline_access_alarms_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
-                        contentDescription = "Crear partido"
+                        contentDescription = "Hora partido"
                     )
                     Text(
                         modifier = Modifier
