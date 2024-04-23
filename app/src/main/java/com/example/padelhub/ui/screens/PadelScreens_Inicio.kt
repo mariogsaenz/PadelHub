@@ -81,11 +81,14 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.padelhub.R
 import com.example.padelhub.modelo.Partido
+import com.example.padelhub.modelo.Usuario
 import com.example.padelhub.persistencia.GestionPartido
+import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.utils.CustomOutlinedTextField
 import com.example.padelhub.ui.utils.DatePicker
 import com.example.padelhub.ui.utils.TimePicker
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
 
@@ -162,11 +165,18 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore) {
+fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore, auth: FirebaseAuth) {
     var fecha by remember { mutableStateOf("") }
     var hora by remember { mutableStateOf("") }
     var ubicacion by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
+    var usuario: Usuario? = null
+    runBlocking {
+        usuario = GestionUsuario().getUsuarioActual(auth, database)
+    }
+
+    var lista = mutableListOf<Usuario>()
+    usuario?.let { lista.add(it) }
 
     Surface(color = Color.White) {
         Column(
@@ -213,9 +223,9 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
                             "nombre" to nombre,
                             "fecha" to fecha,
                             "hora" to hora,
+                            "jugadores" to lista,
                             "ubicacion" to ubicacion,
-                            "estado" to true,
-                            "jugadores" to 1
+                            "estado" to true
                         )
                         database.collection("partido").add(partido)
                             .addOnSuccessListener { Log.d("Partido", "DocumentSnapshot successfully written!") }
@@ -261,6 +271,8 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
         runBlocking {
             myList = GestionPartido().fetchPartidos(database).toMutableList()
         }
+
+        Log.d("LA LISTA: ", myList.toString())
 
         items(myList) {
             Row(
@@ -309,7 +321,7 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                 )
 
                 Text(
-                    text = "1/4",
+                    text = partido.jugadores.size.toString() + "/4",
                     style = MaterialTheme.typography.labelSmall,
                     fontSize = 20.sp,
                     color = Color.Black,

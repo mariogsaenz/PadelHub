@@ -5,10 +5,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.padelhub.MainActivity
+import com.example.padelhub.modelo.Usuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class GestionUsuario {
     internal fun createAccount(auth: FirebaseAuth, database: FirebaseFirestore, nombre: String, edad: Int, email: String, password: String, navController: NavController, context: Context) {
@@ -78,6 +80,25 @@ class GestionUsuario {
 
 
         // [END sign_in_with_email]
+    }
+
+    suspend  fun getUsuarioActual(auth: FirebaseAuth, database: FirebaseFirestore): Usuario? {
+
+        var currentUser = auth.currentUser
+        var emailUser = currentUser?.email
+        val usuarios = database.collection("usuario")
+            .whereEqualTo("email", emailUser).get().await()
+        var user: Usuario? = null
+
+        for (usuario in usuarios){
+
+            user = Usuario(
+                usuario["nombre"].toString(),
+                usuario["edad"] as Long,
+                usuario["email"].toString()
+            )
+        }
+        return user
     }
 
     internal fun signOut(auth: FirebaseAuth, navController: NavController, context: Context) {

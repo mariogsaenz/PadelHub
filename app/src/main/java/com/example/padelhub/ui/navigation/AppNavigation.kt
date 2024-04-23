@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Inicio.route){
+    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
         composable(route=AppScreens.HomeScreen_Login.route){
             LoginScreen(navController, auth)
         }
@@ -42,7 +42,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             HomeScreenPerfil(navController, auth)
         }
         composable(route=AppScreens.HomeScreen_Inicio_CrearPartido.route){
-            CrearPartidoScreen(navController, database)
+            CrearPartidoScreen(navController, database, auth)
         }
         composable(route=AppScreens.HomeScreen_Pistas_AnadirPista.route){
             AnadirPistaScreen(navController, database)
