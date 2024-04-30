@@ -192,13 +192,6 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
     var hora by remember { mutableStateOf("") }
     var ubicacion by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
-    var usuario: Usuario? = null
-    runBlocking {
-        usuario = GestionUsuario().getUsuarioActual(auth, database)
-    }
-
-    var lista = mutableListOf<Usuario>()
-    usuario?.let { lista.add(it) }
 
     Surface(color = Color.White) {
         Column(
@@ -241,17 +234,9 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
             ) {
                 Button(
                     onClick = {
-                        val partido = hashMapOf(
-                            "nombre" to nombre,
-                            "fecha" to fecha,
-                            "hora" to hora,
-                            "jugadores" to lista,
-                            "ubicacion" to ubicacion,
-                            "estado" to true
-                        )
-                        database.collection("partido").add(partido)
-                            .addOnSuccessListener { Log.d("Partido", "DocumentSnapshot successfully written!") }
-                            .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
+                        runBlocking {
+                            GestionPartido().crear(fecha, hora, ubicacion, nombre, database, auth)
+                        }
                         navController.navigateUp()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00272B)),
@@ -291,7 +276,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
     ) {
         var myList = mutableListOf<Partido>()
         runBlocking {
-            myList = GestionPartido().fetchPartidos(database).toMutableList()
+            myList = GestionPartido().fetch(database).toMutableList()
         }
 
         Log.d("LA LISTA: ", myList.toString())

@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.padelhub.MainActivity
+import com.example.padelhub.modelo.Partido
 import com.example.padelhub.modelo.Usuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.google.firebase.auth.FirebaseAuth
@@ -26,10 +27,12 @@ class GestionUsuario {
                         "Te has registrado con exito.",
                         Toast.LENGTH_SHORT,
                     ).show()
+                    val partidos = listOf<String>()
                     val usuario = hashMapOf(
                         "email" to email,
                         "nombre" to nombre,
-                        "edad" to edad
+                        "edad" to edad,
+                        "partidosActivos" to partidos
                     )
                     database.collection("usuario").add(usuario)
                         .addOnSuccessListener { Log.d(MainActivity.TAG, "DocumentSnapshot successfully written!") }
@@ -83,8 +86,9 @@ class GestionUsuario {
     }
 
     suspend fun getUsuarioActual(auth: FirebaseAuth, database: FirebaseFirestore): Usuario? {
-        var currentUser = auth.currentUser
-        var emailUser = currentUser?.email
+
+        val currentUser = auth.currentUser
+        val emailUser = currentUser?.email
         val usuarios = database.collection("usuario")
             .whereEqualTo("email", emailUser).get().await()
         var user: Usuario? = null
@@ -92,9 +96,11 @@ class GestionUsuario {
         for (usuario in usuarios){
 
             user = Usuario(
+                usuario.id,
                 usuario["nombre"].toString(),
                 usuario["edad"] as Long,
-                usuario["email"].toString()
+                usuario["email"].toString(),
+                usuario["partidosActivos"] as List<String>
             )
         }
         return user
