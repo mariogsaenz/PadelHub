@@ -1,6 +1,9 @@
 package com.example.padelhub.ui.screens
 
 import android.annotation.SuppressLint
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +34,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,9 +48,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -54,13 +64,22 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import com.example.padelhub.R
+import com.example.padelhub.modelo.Usuario
 import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.theme.verdePadel
+import com.example.padelhub.ui.utils.CustomOutlinedTextField
+import com.example.padelhub.ui.utils.DatePicker
+import com.example.padelhub.ui.utils.TimePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
@@ -124,13 +143,13 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth, databas
     }
 }
 
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database: FirebaseFirestore) {
     val context = LocalContext.current
+    var usuarioActivo: Usuario? = null
     runBlocking {
-        //var usuarioActivo = GestionUsuario.getUsuarioActivo(database)
+        usuarioActivo = GestionUsuario().getUsuarioActual(auth,database)
     }
     Card(
         shape = RoundedCornerShape(40.dp),
@@ -148,27 +167,79 @@ fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Image(
-                    painter = painterResource(id = R.drawable.person_24px),
-                    contentDescription = "imagenUsuario",
-                    modifier = Modifier
-                        .size(75.dp)
-                        .clip(CircleShape)
-                        .padding(vertical = 10.dp),
-                    contentScale = ContentScale.Fit
+                usuarioActivo?.let {
+                    Image(
+                        painter = painterResource(id = R.drawable.person_24px),
+                        contentDescription = "imagenUsuario",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .padding(vertical = 10.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Text(
+                        text = it.nombre,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF00272B),
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.padding(vertical = 7.dp))
+            usuarioActivo?.let {
+                val edadString = it.edad.toString()
+                Text(
+                    text = buildAnnotatedString{
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF00272B),
+                            )
+                        ){
+                            append("Edad: ")
+                        }
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color(0xFF00272B)
+                            )
+                        ){
+                            append(edadString)
+                        }
+                    },
+                    modifier = Modifier.padding(8.dp)
                 )
                 Text(
-                    text = "Mario Gil Sáenz",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF00272B),
+                    text = buildAnnotatedString{
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF00272B)
+                            )
+                        ){
+                            append("Email: ")
+                        }
+                        withStyle(
+                            style = SpanStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color(0xFF00272B)
+                            )
+                        ){
+                            append(it.email)
+                        }
+                    },
+                    modifier = Modifier.padding(8.dp)
                 )
             }
             Spacer(modifier = Modifier.padding(vertical = 7.dp))
             Button(
                 onClick = {
-                    //Llamada a la persistencia para modificar los datos del usuario
+                    navController.navigate("modificar_datos")
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 modifier = Modifier.fillMaxWidth()
@@ -196,6 +267,68 @@ fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database
                 Text(
                     "Cerrar sesión",
                     style = MaterialTheme.typography.labelMedium,
+                )
+            }
+        }
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ModificarDatosScreen(navController: NavController, database: FirebaseFirestore) {
+    var nombre by remember { mutableStateOf("") }
+    var edad by remember { mutableStateOf("") }
+    Surface(color = Color.White) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CustomOutlinedTextField(value = nombre, onValueChange = {nombre = it}, label = "Nuevo nombre de usuario")
+            CustomOutlinedTextField(value = edad, onValueChange = {edad = it}, imeAction = ImeAction.Done, label = "Nueva edad")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Button(
+                    onClick = {
+                        val usuario = hashMapOf(
+                            "nombre" to nombre,
+                            "edad" to edad,
+                        )
+                        //Aqui habría que llamar a la base de datos para que modifique los datos del usuario
+                        navController.navigateUp()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Modificar datos")
+                }
+                ClickableText(
+                    text = AnnotatedString("Cancelar") ,
+                    onClick = { navController.navigateUp() },
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier
+                        .padding(0.dp, 10.dp)
+                        .drawBehind {
+                            val strokeWidthPx = 1.dp.toPx()
+                            val verticalOffset = size.height - 2.sp.toPx()
+                            drawLine(
+                                color = Color.Black,
+                                strokeWidth = strokeWidthPx,
+                                start = Offset(0f, verticalOffset),
+                                end = Offset(size.width, verticalOffset)
+                            )
+                        },
                 )
             }
         }

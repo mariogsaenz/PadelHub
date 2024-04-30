@@ -14,6 +14,7 @@ import com.example.padelhub.ui.screens.HomeScreenInicio
 import com.example.padelhub.ui.screens.HomeScreenPerfil
 import com.example.padelhub.ui.screens.HomeScreenPistas
 import com.example.padelhub.ui.screens.LoginScreen
+import com.example.padelhub.ui.screens.ModificarDatosScreen
 import com.example.padelhub.ui.screens.RegisterScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -50,7 +51,9 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
         composable(route=AppScreens.HomeScreen_Inicio_BuscarPartidos.route){
             BuscarPartidosScreen(navController, database)
         }
-
+        composable(route=AppScreens.HomeScreen_Perfil_ModificarDatos.route){
+            ModificarDatosScreen(navController, database)
+        }
     }
 }
 

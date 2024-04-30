@@ -82,8 +82,7 @@ class GestionUsuario {
         // [END sign_in_with_email]
     }
 
-    suspend  fun getUsuarioActual(auth: FirebaseAuth, database: FirebaseFirestore): Usuario? {
-
+    suspend fun getUsuarioActual(auth: FirebaseAuth, database: FirebaseFirestore): Usuario? {
         var currentUser = auth.currentUser
         var emailUser = currentUser?.email
         val usuarios = database.collection("usuario")
