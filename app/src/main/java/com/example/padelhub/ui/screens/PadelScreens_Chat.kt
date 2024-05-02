@@ -199,10 +199,3 @@ fun ContenidoAppChat() {
     }
 }
 
-@Preview
-@Composable
-fun PadelHubPreview(){
-    PadelHubTheme {
-        HomeScreenChat(navController = rememberNavController())
-    }
-}
