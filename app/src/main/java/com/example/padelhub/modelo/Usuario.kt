@@ -1,10 +1,10 @@
 package com.example.padelhub.modelo
 
 data class Usuario(
-    val id: String,
-    val nombre: String,
-    val edad: Long,
-    val email: String,
-    val partidosActivos: List<String>
+    var id: String = "",
+    val nombre: String = "",
+    val edad: Long = 0,
+    val email: String = "",
+    val partidosActivos: List<String> = listOf()
 )
 

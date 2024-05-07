@@ -94,13 +94,8 @@ class GestionUsuario {
         var user: Usuario? = null
 
         for (usuario in usuarios){
-            user = Usuario(
-                usuario.id,
-                usuario["nombre"].toString(),
-                usuario["edad"] as Long,
-                usuario["email"].toString(),
-                usuario["partidosActivos"] as List<String>
-            )
+            user = usuario.toObject(Usuario::class.java)
+            user.id=usuario.id
         }
 
         return user

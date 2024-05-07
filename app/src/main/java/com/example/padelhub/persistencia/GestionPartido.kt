@@ -5,6 +5,7 @@ import com.example.padelhub.modelo.Partido
 import com.example.padelhub.modelo.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
@@ -19,21 +20,12 @@ class GestionPartido {
                 .get()
                 .await()
             Log.d("document: ", documents.toString())
-            for (document in documents) {
-
-
-                val partido = Partido(
-                    document.id,
-                    document["nombre"].toString(),
-                    document["fecha"].toString(),
-                    document["hora"].toString(),
-                    document["propietario"] as Usuario,
-                    document["jugadores"] as List<Usuario>,
-                    document["ubicacion"].toString(),
-                    document["estado"] as Boolean,
-                )
-                Log.d("Partido: ", partido.toString())
+            for(document in documents) {
+                val partido = document.toObject(Partido::class.java)
+                partido.id=document.id
+                Log.d("partidfo: ", partido.toString())
                 myList.add(partido)
+                Log.d("LA LISTA1: ", myList.toString())
             }
         } catch (e: Exception) {
             Log.d("Partido: ", e.message.toString())
@@ -76,4 +68,5 @@ class GestionPartido {
             .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
     }
 }
+
 

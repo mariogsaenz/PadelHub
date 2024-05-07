@@ -278,8 +278,7 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
         runBlocking {
             myList = GestionPartido().fetch(database).toMutableList()
         }
-
-        Log.d("LA LISTA: ", myList.toString())
+        Log.d("LA LISTA2: ", myList.toString())
 
         items(myList) {
             Row(
