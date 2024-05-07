@@ -52,7 +52,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             BuscarPartidosScreen(navController, database)
         }
         composable(route=AppScreens.HomeScreen_Perfil_ModificarDatos.route){
-            ModificarDatosScreen(navController, database)
+            ModificarDatosScreen(auth, navController, database)
         }
     }
 }

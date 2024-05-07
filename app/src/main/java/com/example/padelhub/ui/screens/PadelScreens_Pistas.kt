@@ -346,4 +346,3 @@ fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
         }
     }
 }
-

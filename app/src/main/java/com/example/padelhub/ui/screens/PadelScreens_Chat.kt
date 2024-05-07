@@ -3,6 +3,7 @@ package com.example.padelhub.ui.screens
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
@@ -151,7 +153,45 @@ fun ContenidoAppChat() {
                     textAlign = TextAlign.Start
                 )
             }
-
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                LazyColumn(
+                    flingBehavior = ScrollableDefaults.flingBehavior(),
+                    state = rememberLazyListState(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    items(messages) { message ->
+                        MessageItem(message = message)
+                    }
+                }
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextField(
+                        value = messageText,
+                        onValueChange = {
+                            messageText = it
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            if (messageText.text.isNotEmpty()) {
+                                messages = messages + Message(Message.MessageType.TEXT, messageText.text)
+                                messageText = TextFieldValue()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72))
+                    ){
+                        Icon(Icons.Filled.Send, contentDescription = "Enviar")
+                    }
+                }
+            }
+            //PARTE VIEJA PAULA
+            /*
             Scaffold(
                 containerColor = Color.Transparent,
                 floatingActionButton = {
@@ -194,7 +234,7 @@ fun ContenidoAppChat() {
                     }
                 }
             }
-
+            */
         }
     }
 }

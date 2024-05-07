@@ -276,7 +276,7 @@ fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ModificarDatosScreen(navController: NavController, database: FirebaseFirestore) {
+fun ModificarDatosScreen(auth: FirebaseAuth, navController: NavController, database: FirebaseFirestore) {
     var nombre by remember { mutableStateOf("") }
     var edad by remember { mutableStateOf("") }
     Surface(color = Color.White) {
@@ -305,7 +305,10 @@ fun ModificarDatosScreen(navController: NavController, database: FirebaseFiresto
                             "nombre" to nombre,
                             "edad" to edad,
                         )
-                        //Aqui habría que llamar a la base de datos para que modifique los datos del usuario
+                        var edadInt = edad.toInt()
+                        runBlocking {
+                            GestionUsuario().changeDatosUsuario(auth,database,nombre,edadInt)
+                        }
                         navController.navigateUp()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72)),

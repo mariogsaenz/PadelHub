@@ -94,7 +94,6 @@ class GestionUsuario {
         var user: Usuario? = null
 
         for (usuario in usuarios){
-
             user = Usuario(
                 usuario.id,
                 usuario["nombre"].toString(),
@@ -103,6 +102,7 @@ class GestionUsuario {
                 usuario["partidosActivos"] as List<String>
             )
         }
+
         return user
     }
 
@@ -118,6 +118,24 @@ class GestionUsuario {
     }
 
     private fun updateUI(user: FirebaseUser?) {
+    }
+
+    suspend fun changeDatosUsuario(auth: FirebaseAuth, database: FirebaseFirestore, nombre: String, edad: Int){
+        val doc = getUsuarioActual(auth,database)?.let { database.collection("usuario").document(it.id) }
+
+        database.runTransaction { transaction ->
+
+            if (doc != null) {
+                transaction.update(doc, "nombre", nombre)
+            }
+            if (doc != null) {
+                transaction.update(doc, "edad", edad)
+            }
+
+            // Success
+            null
+        }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
+            .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
     }
 }
 
