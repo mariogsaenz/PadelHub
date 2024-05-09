@@ -3,9 +3,14 @@ package com.example.padelhub.ui.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.padelhub.modelo.Partido
 import com.example.padelhub.ui.screens.AnadirPistaScreen
 import com.example.padelhub.ui.screens.BuscarPartidosScreen
 import com.example.padelhub.ui.screens.CrearPartidoScreen
@@ -23,7 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
+    var filtroBusqueda by remember { mutableStateOf("") }
+    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Inicio.route){
         composable(route=AppScreens.HomeScreen_Login.route){
             LoginScreen(navController, auth)
         }
@@ -49,7 +55,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             AnadirPistaScreen(navController, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio_BuscarPartidos.route){
-            BuscarPartidosScreen(navController, database)
+            BuscarPartidosScreen(filtroBusqueda,navController, database)
         }
         composable(route=AppScreens.HomeScreen_Perfil_ModificarDatos.route){
             ModificarDatosScreen(auth, navController, database)

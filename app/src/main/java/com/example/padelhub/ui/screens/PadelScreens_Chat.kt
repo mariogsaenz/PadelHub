@@ -157,17 +157,19 @@ fun ContenidoAppChat() {
                 modifier = Modifier.padding(8.dp)
             ) {
                 LazyColumn(
-                    flingBehavior = ScrollableDefaults.flingBehavior(),
-                    state = rememberLazyListState(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier.weight(1f)
                 ) {
                     items(messages) { message ->
                         MessageItem(message = message)
                     }
                 }
                 Row(
-                    modifier = Modifier.padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp,0.dp,8.dp,80.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     TextField(
                         value = messageText,
@@ -190,51 +192,6 @@ fun ContenidoAppChat() {
                     }
                 }
             }
-            //PARTE VIEJA PAULA
-            /*
-            Scaffold(
-                containerColor = Color.Transparent,
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            // Acción para enviar mensaje
-                            if (messageText.text.isNotEmpty()) {
-                                messages = messages + Message(Message.MessageType.TEXT, messageText.text)
-                                messageText = TextFieldValue()
-                            }
-                        }
-                    ) {
-                        Icon(Icons.Filled.Send, contentDescription = "Enviar")
-                    }
-                },
-                floatingActionButtonPosition = FabPosition.End
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        items(messages) { message ->
-                            MessageItem(message = message)
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.padding(50.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        TextField(
-                            value = messageText,
-                            onValueChange = {
-                                messageText = it
-                            },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-            */
         }
     }
 }

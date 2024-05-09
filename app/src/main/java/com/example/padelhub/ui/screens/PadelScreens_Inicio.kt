@@ -153,7 +153,7 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                 {
                     Icon(
                         modifier = Modifier.size(40.dp),
-                        painter = painterResource(id = R.drawable.baseline_add_circle_outline_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        painter = painterResource(id = R.drawable.baseline_add_circle_outline_24),
                         contentDescription = "Crear partido"
                     )
                 }
@@ -162,25 +162,38 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(10.dp, 0.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                CustomOutlinedTextField(value = filtroBusqueda, onValueChange = {filtroBusqueda = it}, imeAction = ImeAction.Done, label = "Nombre del partido")
+                CustomOutlinedTextField(
+                    value = filtroBusqueda,
+                    onValueChange = {filtroBusqueda = it},
+                    imeAction = ImeAction.Done,
+                    label = "Nombre del partido"
+                )
+
+                /*
                 Button(
                     //AQUI HABRÁ QUE LLAMAR AL MÉTODO DE PERSISTENCIA QUE DEVUELVA LOS PARTIDOS CON ESE NOMBRE
-                    onClick = {/*TODO*/},
+
+                    onClick = {
+
+                        runBlocking {
+
+                        }
+
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00272B)),
                     modifier = Modifier.fillMaxWidth()
                 ){
                     Icon(
                         modifier = Modifier.size(20.dp),
                         painter = painterResource(id = R.drawable.buscar_logo),
-                        contentDescription = "Ubicación pista"
+                        contentDescription = "Buscar"
                     )
-                }
+                }*/
             }
-            BuscarPartidosScreen(navController,database)
+            BuscarPartidosScreen(filtroBusqueda,navController,database)
         }
     }
 }
@@ -268,7 +281,7 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BuscarPartidosScreen(navController: NavController, database: FirebaseFirestore) {
+fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, database: FirebaseFirestore) {
     LazyColumn(
         flingBehavior = ScrollableDefaults.flingBehavior(),
         state = rememberLazyListState(),
@@ -276,7 +289,14 @@ fun BuscarPartidosScreen(navController: NavController, database: FirebaseFiresto
     ) {
         var myList = mutableListOf<Partido>()
         runBlocking {
-            myList = GestionPartido().fetch(database).toMutableList()
+            if(filtroBusqueda==""){
+                myList = GestionPartido().fetch(database).toMutableList()
+            }
+            else{
+                //FALTA DE IMPLEMENTAR ESTE MÉTODO EN GESTION PARTIDO
+                //GestionPartido().getPartidosByNombre(database).toMutableList()
+            }
+
         }
         Log.d("LA LISTA2: ", myList.toString())
 
