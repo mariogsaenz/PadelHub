@@ -52,7 +52,20 @@ class GestionPartido {
             "estado" to true
         )
         database.collection("partido").add(partido)
-            .addOnSuccessListener { Log.d("Partido", "DocumentSnapshot successfully written!") }
+            .addOnSuccessListener {it->
+                usuario?.let {
+                    var usuarioDB = database.collection("usuario").document(usuario.id)
+                    database.runTransaction { transaction ->
+                        usuario.partidosActivos.add(it.id)
+                        transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
+
+                        // Success
+                        null
+
+                    }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
+                    .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
+                }
+            }
             .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
     }
     suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore){
