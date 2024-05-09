@@ -40,7 +40,7 @@ class GestionPartido {
         try {
             val documents2 = database.collection("partido")
                 .whereEqualTo("estado", true)
-                .whereEqualTo("nombre", "RonCola")
+                .whereEqualTo("nombre", filtroBusqueda)
                 //.whereArrayContains("nombre",filtroBusqueda) //ESTO ES LO QUE ESTA FALLANDO
                 .get()
                 .await()
