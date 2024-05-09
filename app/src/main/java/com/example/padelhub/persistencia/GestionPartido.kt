@@ -34,6 +34,29 @@ class GestionPartido {
         return myList
     }
 
+    suspend fun fetchNombre(filtroBusqueda: String, database: FirebaseFirestore): List<Partido> {
+        val myList2 = mutableListOf<Partido>()
+
+        try {
+            val documents2 = database.collection("partido")
+                .whereEqualTo("estado", true)
+                .whereEqualTo("nombre", "RonCola")
+                //.whereArrayContains("nombre",filtroBusqueda) //ESTO ES LO QUE ESTA FALLANDO
+                .get()
+                .await()
+            for (document in documents2) {
+                val partido = document.toObject(Partido::class.java)
+                partido.id = document.id
+                myList2.add(partido)
+            }
+        } catch (e: Exception) {
+            Log.d("Error al buscar partidos: ", e.message.toString())
+        }
+
+        return myList2
+    }
+
+
     suspend fun crear(fecha: String,hora: String,ubicacion: String, nombre:String,
                              database: FirebaseFirestore, auth: FirebaseAuth){
         val usuario: Usuario?

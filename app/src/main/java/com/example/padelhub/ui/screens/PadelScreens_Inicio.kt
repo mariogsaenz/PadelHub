@@ -5,9 +5,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -86,6 +82,7 @@ import com.example.padelhub.persistencia.GestionPartido
 import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.utils.CustomOutlinedTextField
+import com.example.padelhub.ui.utils.CustomOutlinedTextField2
 import com.example.padelhub.ui.utils.DatePicker
 import com.example.padelhub.ui.utils.TimePicker
 import com.google.firebase.auth.FirebaseAuth
@@ -106,6 +103,7 @@ fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) 
 fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     var filtroBusqueda by remember { mutableStateOf("") }
+    var navigateToBuscarPartidos by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -159,39 +157,13 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                 }
 
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(10.dp, 0.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                CustomOutlinedTextField(
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CustomOutlinedTextField2(
                     value = filtroBusqueda,
                     onValueChange = {filtroBusqueda = it},
                     imeAction = ImeAction.Done,
                     label = "Nombre del partido"
                 )
-
-                /*
-                Button(
-                    //AQUI HABRÁ QUE LLAMAR AL MÉTODO DE PERSISTENCIA QUE DEVUELVA LOS PARTIDOS CON ESE NOMBRE
-
-                    onClick = {
-
-                        runBlocking {
-
-                        }
-
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00272B)),
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    Icon(
-                        modifier = Modifier.size(20.dp),
-                        painter = painterResource(id = R.drawable.buscar_logo),
-                        contentDescription = "Buscar"
-                    )
-                }*/
             }
             BuscarPartidosScreen(filtroBusqueda,navController,database)
         }
@@ -288,19 +260,34 @@ fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, da
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var myList = mutableListOf<Partido>()
+        var myList2 = mutableListOf<Partido>()
         runBlocking {
             if(filtroBusqueda==""){
                 myList = GestionPartido().fetch(database).toMutableList()
+                Log.d("NOMBRESSSSS: ", myList.toString())
             }
             else{
-                //FALTA DE IMPLEMENTAR ESTE MÉTODO EN GESTION PARTIDO
-                //GestionPartido().getPartidosByNombre(database).toMutableList()
+                myList2 = GestionPartido().fetchNombre(filtroBusqueda,database).toMutableList()
+                Log.d("NOMBRESSSSS2: ", myList2.toString())
             }
 
         }
-        Log.d("LA LISTA2: ", myList.toString())
+        Log.d("LA LISTA2: ", myList2.toString())
+
 
         items(myList) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Column(
+                ) {
+                    ExpandableCard(partido = it, database)
+                }
+            }
+        }
+        items(myList2) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
