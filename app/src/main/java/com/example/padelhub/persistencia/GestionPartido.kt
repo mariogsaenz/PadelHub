@@ -38,16 +38,19 @@ class GestionPartido {
         val myList2 = mutableListOf<Partido>()
 
         try {
-            val documents2 = database.collection("partido")
+            val querySnapshot = database.collection("partido")
                 .whereEqualTo("estado", true)
-                .whereEqualTo("nombre", filtroBusqueda)
-                //.whereArrayContains("nombre",filtroBusqueda) //ESTO ES LO QUE ESTA FALLANDO
                 .get()
                 .await()
-            for (document in documents2) {
+
+            for (document in querySnapshot.documents) {
                 val partido = document.toObject(Partido::class.java)
-                partido.id = document.id
-                myList2.add(partido)
+                partido?.let {
+                    if (it.nombre.contains(filtroBusqueda, ignoreCase = true)) {
+                        it.id = document.id
+                        myList2.add(it)
+                    }
+                }
             }
         } catch (e: Exception) {
             Log.d("Error al buscar partidos: ", e.message.toString())

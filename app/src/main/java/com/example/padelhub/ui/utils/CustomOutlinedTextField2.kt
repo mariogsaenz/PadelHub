@@ -43,6 +43,7 @@ fun CustomOutlinedTextField2(
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(3.dp),
         value = value,
         onValueChange = onValueChange,
