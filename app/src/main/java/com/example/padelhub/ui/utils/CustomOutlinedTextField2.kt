@@ -1,5 +1,6 @@
 package com.example.padelhub.ui.utils
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +24,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.padelhub.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,15 +49,20 @@ fun CustomOutlinedTextField2(
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(3.dp),
+            .padding(8.dp),
         value = value,
         onValueChange = onValueChange,
         label = {
-            Text(text = label)
+            Text(
+                text = label,
+                color=Color.LightGray,
+                fontWeight = FontWeight.Light
+            )
         },
+        textStyle = TextStyle(color = Color.White),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF00272B),
-            unfocusedBorderColor = Color(0xFF005D72),
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.White
         ),
         shape = RoundedCornerShape(percent = 20),
         singleLine = true,
@@ -85,6 +95,12 @@ fun CustomOutlinedTextField2(
 
             }
         } else VisualTransformation.None,
+        leadingIcon = {
+            Image(
+                painter = painterResource(id = R.drawable.icono_logo_fino),
+                contentDescription = "Imagen del icono"
+            )
+        },
         trailingIcon = typePassword.takeIf { it }?.let {
             {
                 if (showPassword) {

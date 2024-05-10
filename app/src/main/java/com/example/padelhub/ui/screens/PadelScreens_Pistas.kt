@@ -163,7 +163,7 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
                     value = filtroBusqueda,
                     onValueChange = {filtroBusqueda = it},
                     imeAction = ImeAction.Done,
-                    label = "Nombre del partido"
+                    label = "Introduce el nombre de la pista"
                 )
             }
             BuscarPistasScreen(filtroBusqueda,navController,database)

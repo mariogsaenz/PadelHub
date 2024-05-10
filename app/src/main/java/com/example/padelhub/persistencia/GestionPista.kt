@@ -44,13 +44,6 @@ class GestionPista {
                 .await()
 
             for (document in documents) {
-                /*val pista = Pista(
-                    document.id,
-                    document["nombre"].toString(),
-                    document["ubicacion"].toString(),
-                    document["numeroPistas"].toString(),
-                    document["precio"].toString(),
-                )*/
                 val pista = document.toObject(Pista::class.java)
                 pista?.let{
                     if(it.nombre.contains(filtroBusqueda, ignoreCase = true)){

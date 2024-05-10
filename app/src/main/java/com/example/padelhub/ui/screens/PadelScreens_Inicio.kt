@@ -161,7 +161,7 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                     value = filtroBusqueda,
                     onValueChange = {filtroBusqueda = it},
                     imeAction = ImeAction.Done,
-                    label = "Nombre del partido"
+                    label = "Introduce el nombre del partido"
                 )
             }
             BuscarPartidosScreen(filtroBusqueda,navController,database)
