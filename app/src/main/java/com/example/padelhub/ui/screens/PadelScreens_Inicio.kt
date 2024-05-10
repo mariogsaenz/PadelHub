@@ -164,7 +164,11 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
                     label = "Introduce el nombre del partido"
                 )
             }
-            BuscarPartidosScreen(filtroBusqueda,navController,database)
+            Column(modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 56.dp, topEnd = 56.dp)))
+            {
+                BuscarPartidosScreen(filtroBusqueda,navController,database)
+            }
         }
     }
 }

@@ -166,7 +166,11 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
                     label = "Introduce el nombre de la pista"
                 )
             }
-            BuscarPistasScreen(filtroBusqueda,navController,database)
+            Column(modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 56.dp, topEnd = 56.dp)))
+            {
+                BuscarPistasScreen(filtroBusqueda,navController,database)
+            }
         }
     }
 }
