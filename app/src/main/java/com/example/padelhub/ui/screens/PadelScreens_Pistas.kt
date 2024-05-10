@@ -89,6 +89,7 @@ import com.example.padelhub.persistencia.GestionPartido
 import com.example.padelhub.persistencia.GestionPista
 import com.example.padelhub.ui.theme.verdePadel
 import com.example.padelhub.ui.utils.CustomOutlinedTextField
+import com.example.padelhub.ui.utils.CustomOutlinedTextField2
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
 
@@ -105,6 +106,7 @@ fun HomeScreenPistas(navController: NavController, database: FirebaseFirestore) 
 @Composable
 fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
+    var filtroBusqueda by remember { mutableStateOf("") }
     Box(modifier = Modifier
         .fillMaxSize()
         .paint(
@@ -156,7 +158,15 @@ fun ContenidoAppPistas(navController: NavController, database: FirebaseFirestore
                     )
                 }
             }
-            BuscarPistasScreen(navController,database)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                CustomOutlinedTextField2(
+                    value = filtroBusqueda,
+                    onValueChange = {filtroBusqueda = it},
+                    imeAction = ImeAction.Done,
+                    label = "Nombre del partido"
+                )
+            }
+            BuscarPistasScreen(filtroBusqueda,navController,database)
         }
     }
 }
@@ -234,18 +244,36 @@ fun AnadirPistaScreen(navController: NavController, database: FirebaseFirestore)
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BuscarPistasScreen(navController: NavController, database: FirebaseFirestore) {
+fun BuscarPistasScreen(filtroBusqueda: String, navController: NavController, database: FirebaseFirestore) {
     LazyColumn(
         flingBehavior = ScrollableDefaults.flingBehavior(),
         state = rememberLazyListState(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var myList = mutableListOf<Pista>()
+        var myList2 = mutableListOf<Pista>()
         runBlocking {
-            myList = GestionPista().fetchPistas(database).toMutableList()
+            if(filtroBusqueda==""){
+                myList = GestionPista().fetchPistas(database).toMutableList()
+            }
+            else{
+                myList2 = GestionPista().fetchPistasNombre(filtroBusqueda,database).toMutableList()
+            }
         }
 
         items(myList) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Column(
+                ) {
+                    ExpandableCard(pista = it, database)
+                }
+            }
+        }
+        items(myList2) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier

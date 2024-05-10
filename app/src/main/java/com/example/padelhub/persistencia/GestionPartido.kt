@@ -28,7 +28,7 @@ class GestionPartido {
                 Log.d("LA LISTA1: ", myList.toString())
             }
         } catch (e: Exception) {
-            Log.d("Partido: ", e.message.toString())
+            Log.d("Error al buscar partidos: ", e.message.toString())
         }
 
         return myList
@@ -53,7 +53,7 @@ class GestionPartido {
                 }
             }
         } catch (e: Exception) {
-            Log.d("Error al buscar partidos: ", e.message.toString())
+            Log.d("Error al buscar partidos con el nombre indicado: ", e.message.toString())
         }
 
         return myList2

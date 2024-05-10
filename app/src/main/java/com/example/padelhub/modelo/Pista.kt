@@ -1,7 +1,7 @@
 package com.example.padelhub.modelo
 
 data class Pista(
-    val id: String = "",
+    var id: String = "",
     val nombre: String = "",
     val ubicacion: String = "",
     //val numeroPistas: Int = 0,

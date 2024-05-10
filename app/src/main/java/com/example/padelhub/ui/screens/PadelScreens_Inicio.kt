@@ -103,7 +103,6 @@ fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) 
 fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     var filtroBusqueda by remember { mutableStateOf("") }
-    var navigateToBuscarPartidos by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -270,7 +269,6 @@ fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, da
                 myList2 = GestionPartido().fetchNombre(filtroBusqueda,database).toMutableList()
                 Log.d("NOMBRESSSSS2: ", myList2.toString())
             }
-
         }
         Log.d("LA LISTA2: ", myList2.toString())
 
