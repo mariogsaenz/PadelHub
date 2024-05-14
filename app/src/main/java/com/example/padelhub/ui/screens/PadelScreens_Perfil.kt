@@ -5,8 +5,8 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +32,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -71,9 +74,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.padelhub.R
+import com.example.padelhub.modelo.Partido
 import com.example.padelhub.modelo.Usuario
+import com.example.padelhub.persistencia.GestionPartido
 import com.example.padelhub.persistencia.GestionUsuario
 import com.example.padelhub.ui.navigation.AppScreens
 import com.example.padelhub.ui.theme.verdePadel
@@ -103,9 +109,10 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth, databas
         modifier = Modifier
             .fillMaxSize()
             .paint(
-            // Replace with your image id
-            painterResource(id = R.drawable.fondo),
-            contentScale = ContentScale.FillBounds)
+                // Replace with your image id
+                painterResource(id = R.drawable.fondo),
+                contentScale = ContentScale.FillBounds
+            )
     ) {
         Image(
             painter = backgroundImage,
@@ -137,6 +144,35 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth, databas
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ){
+                    Button(
+                        onClick = { navController.navigate("modificar_datos")},
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                    )
+                    {
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            painter = painterResource(id = R.drawable.ajustes_logo),
+                            contentDescription = "Modificar mis datos"
+                        )
+                    }
+                    Button(
+                        onClick = { GestionUsuario().signOut(auth, navController, context)},
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                    )
+                    {
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            painter = painterResource(id = R.drawable.logout_logo),
+                            contentDescription = "Cerrar sesión"
+                        )
+                    }
+                }
             }
             InfoUsuarioScreen(navController,auth,database)
         }
@@ -156,7 +192,7 @@ fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
         modifier = Modifier
             .fillMaxHeight()
-            .padding(5.dp,5.dp,5.dp,100.dp)
+            .padding(5.dp, 5.dp, 5.dp, 100.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -177,97 +213,96 @@ fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database
                             .padding(vertical = 10.dp),
                         contentScale = ContentScale.Fit
                     )
-                    Text(
-                        text = it.nombre,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF00272B),
-                    )
+                    Column(
+
+                    ){
+                        Text(
+                            text = it.nombre,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF00272B),
+                        )
+                        val edadString = it.edad.toString()
+                        Text(
+                            text = buildAnnotatedString{
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF00272B),
+                                    )
+                                ){
+                                    append("Edad: ")
+                                }
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color(0xFF00272B)
+                                    )
+                                ){
+                                    append(edadString)
+                                }
+                            },
+                        )
+                        Text(
+                            text = buildAnnotatedString{
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF00272B)
+                                    )
+                                ){
+                                    append("Email: ")
+                                }
+                                withStyle(
+                                    style = SpanStyle(
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color(0xFF00272B)
+                                    )
+                                ){
+                                    append(it.email)
+                                }
+                            },
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.padding(vertical = 7.dp))
-            usuarioActivo?.let {
-                val edadString = it.edad.toString()
-                Text(
-                    text = buildAnnotatedString{
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 25.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF00272B),
-                            )
-                        ){
-                            append("Edad: ")
+            //AQUI AÑADIMOS LA LISTA DE PARTIDOS CREADOS POR EL USUARIO
+            //¿Se podría añadir también una lista con los partidos en los que está inscrito?
+            //Así solo se muestran los partidos que ha creado el.
+            //Sería interesante añadir dos botones o una forma de filtrar esto para que te puedan salir partidos creados por ti y/o partidos en los que estas inscrito
+            Column(modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 56.dp, topEnd = 56.dp))
+            ){
+                LazyColumn(
+                    flingBehavior = ScrollableDefaults.flingBehavior(),
+                    state = rememberLazyListState(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    var myList = mutableListOf<Partido>()
+                    runBlocking {
+                        myList = GestionUsuario().getPartidosPropietario(auth,database).toMutableList()
+                    }
+                    Log.d("Lista de partidos del usuario actual: ", myList.toString())
+                    items(myList) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            Column(
+                            ) {
+                                ExpandableCardPerfil(partido = it, database)
+                                //Se usara ExpandableCardPerfil2 para los partidos de los que no somos propietarios y queremos unirnos
+                            }
                         }
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = Color(0xFF00272B)
-                            )
-                        ){
-                            append(edadString)
-                        }
-                    },
-                    modifier = Modifier.padding(8.dp)
-                )
-                Text(
-                    text = buildAnnotatedString{
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 25.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF00272B)
-                            )
-                        ){
-                            append("Email: ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = Color(0xFF00272B)
-                            )
-                        ){
-                            append(it.email)
-                        }
-                    },
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-            Spacer(modifier = Modifier.padding(vertical = 7.dp))
-            Button(
-                onClick = {
-                    navController.navigate("modificar_datos")
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .border(width = 2.dp,
-                        color = Color(0xFF005D72),
-                        shape = RoundedCornerShape(40.dp))
-            ) {
-                Text(
-                    "Modificar mis datos",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color(0xFF005D72)
-                )
-            }
-            Button(
-                onClick = {
-                    GestionUsuario().signOut(auth, navController, context)
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72)),
-                modifier = Modifier.fillMaxWidth()
-                    .padding(8.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    "Cerrar sesión",
-                    style = MaterialTheme.typography.labelMedium,
-                )
+                    }
+                }
             }
         }
     }
@@ -333,6 +368,220 @@ fun ModificarDatosScreen(auth: FirebaseAuth, navController: NavController, datab
                             )
                         },
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpandableCardPerfil(partido: Partido, database: FirebaseFirestore) {
+
+    Card(
+        shape = RoundedCornerShape(40.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(7.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.person_24px),
+                    contentDescription = "imagenPartido",
+                    modifier = Modifier
+                        .size(75.dp)
+                        .clip(CircleShape)
+                        .padding(vertical = 10.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Text(
+                    text = partido.jugadores.size.toString() + "/4",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                )
+
+            }
+
+            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = partido.nombre,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF00272B),
+                )
+                Text(
+                    text = partido.ubicacion,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color(0xFF00272B),
+                )
+                Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.baseline_calendar_month_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Fecha partido"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
+                        text = partido.fecha,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.baseline_access_alarms_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Hora partido"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
+                        text = partido.hora,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+
+                }
+                Spacer(modifier = Modifier.padding(vertical = 2.dp))
+                Button(
+                    onClick = {/*AQUI HABRÍA QUE IMPLEMENTAR LA ELIMINACIÓN DEL PARTIDO EN LA BASE DE DATOS, se deberá notificar al resto de jugadores apuntados al partido*/},
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCB3234))
+                ){
+                    Text(
+                        "Cancelar partido",
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ExpandableCardPerfil2(partido: Partido, database: FirebaseFirestore) {
+
+    Card(
+        shape = RoundedCornerShape(40.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(7.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.person_24px),
+                    contentDescription = "imagenPartido",
+                    modifier = Modifier
+                        .size(75.dp)
+                        .clip(CircleShape)
+                        .padding(vertical = 10.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Text(
+                    text = partido.jugadores.size.toString() + "/4",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                )
+
+            }
+
+            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = partido.nombre,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF00272B),
+                )
+                Text(
+                    text = partido.ubicacion,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color(0xFF00272B),
+                )
+                Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.baseline_calendar_month_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Fecha partido"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
+                        text = partido.fecha,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.baseline_access_alarms_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Hora partido"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
+                        text = partido.hora,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+
+                }
+                Spacer(modifier = Modifier.padding(vertical = 2.dp))
+                Button(
+                    onClick = {/*AQUI HABRÍA QUE IMPLEMENTAR LA ELIMINACIÓN DEL PARTIDO EN LA BASE DE DATOS, se deberá notificar al resto de jugadores apuntados al partido*/},
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCB3234))
+                ){
+                    Text(
+                        "Abandonar el partido",
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                    )
+                }
             }
         }
     }

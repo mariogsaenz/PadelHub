@@ -132,6 +132,35 @@ class GestionUsuario {
         }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
             .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
     }
+
+    suspend fun getPartidosPropietario(auth: FirebaseAuth, database: FirebaseFirestore): MutableList<Partido> {
+        val usuarioActual = getUsuarioActual(auth,database)?.let { database.collection("usuario").document(it.id) }
+        val myList = mutableListOf<Partido>()
+        val usuarioId = usuarioActual?.id
+
+        try {
+            val querySnapshot = database.collection("partido")
+                .whereEqualTo("estado", true)
+                .whereEqualTo("propietario.id",usuarioId)
+                .get()
+                .await()
+            Log.d("Coleccion de partidos del usuario activo: ", querySnapshot.toString())
+
+            for (document in querySnapshot.documents) {
+                val partido = document.toObject(Partido::class.java)
+                if (partido != null) {
+                    partido.id=document.id
+                    myList.add(partido)
+                }
+            }
+        }
+        catch (e: Exception) {
+            Log.d("Error al recuperar los partidos creados por el usuario activo: ", e.message.toString())
+        }
+        Log.d("Lista de partidos del usuario activo: ", myList.toString())
+        return myList
+
+    }
 }
 
 

@@ -107,7 +107,6 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
     Box(modifier = Modifier
         .fillMaxSize()
         .paint(
-            // Replace with your image id
             painterResource(id = R.drawable.fondo),
             contentScale = ContentScale.FillBounds)
     ) {
