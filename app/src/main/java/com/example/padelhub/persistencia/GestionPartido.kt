@@ -66,23 +66,23 @@ class GestionPartido {
         runBlocking {
             usuario= GestionUsuario().getUsuarioActual(auth, database)
         }
-        val lista = mutableListOf<Usuario>()
-        usuario?.let { lista.add(it) }
+        val lista = mutableListOf<String>()
+        usuario?.let { lista.add(it.id) }
         val partido = hashMapOf(
             "nombre" to nombre,
             "fecha" to fecha,
             "hora" to hora,
-            "propietario" to usuario,
+            "propietario" to (usuario?.id ?: ""),
             "jugadores" to lista,
             "ubicacion" to ubicacion,
             "estado" to true
         )
         database.collection("partido").add(partido)
-            .addOnSuccessListener {it->
+            .addOnSuccessListener {it2->
                 usuario?.let {
                     var usuarioDB = database.collection("usuario").document(usuario.id)
                     database.runTransaction { transaction ->
-                        usuario.partidosActivos.add(it.id)
+                        usuario.partidosActivos.add(it2.id)
                         transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
 
                         // Success
@@ -94,18 +94,26 @@ class GestionPartido {
             }
             .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
     }
-    suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore){
+     suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore){
         val sfDocRef = database.collection("partido").document(partido.id)
 
         database.runTransaction { transaction ->
 
             transaction.update(sfDocRef, "estado", false)
 
+            //AQUÍ HABRÍA QUE HACER
+            //Recorrer la lista de jugadores
+            //Para cada jugador, meternos en su lista de partidos activos
+            //y eliminar el partido cuyo id coincida con el partido que estamos eliminando
+
             // Success
             null
         }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
             .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
     }
+
+
+
 }
 
 

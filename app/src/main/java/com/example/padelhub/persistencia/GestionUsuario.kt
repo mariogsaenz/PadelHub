@@ -141,7 +141,7 @@ class GestionUsuario {
         try {
             val querySnapshot = database.collection("partido")
                 .whereEqualTo("estado", true)
-                .whereEqualTo("propietario.id",usuarioId)
+                .whereEqualTo("propietario",usuarioId)
                 .get()
                 .await()
             Log.d("Coleccion de partidos del usuario activo: ", querySnapshot.toString())

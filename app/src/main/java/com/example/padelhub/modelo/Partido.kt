@@ -5,8 +5,8 @@ data class Partido(
     val nombre: String = "",
     val fecha: String = "",
     val hora: String = "",
-    val propietario: Usuario? = null,
-    val jugadores: MutableList<Usuario> = mutableListOf<Usuario>(),
+    val propietario: String = "",
+    val jugadores: MutableList<String> = mutableListOf<String>(),
     val ubicacion: String = "",
     val estado: Boolean = false,
 ){

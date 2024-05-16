@@ -10,6 +10,7 @@ import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -152,7 +153,9 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth, databas
                 ){
                     Button(
                         onClick = { navController.navigate("modificar_datos")},
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(horizontal = 2.dp, vertical = 4.dp)
                     )
                     {
                         Icon(
@@ -163,7 +166,9 @@ fun ContenidoAppPerfil(navController: NavController, auth: FirebaseAuth, databas
                     }
                     Button(
                         onClick = { GestionUsuario().signOut(auth, navController, context)},
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(horizontal = 2.dp, vertical = 4.dp)
                     )
                     {
                         Icon(
@@ -463,7 +468,11 @@ fun ExpandableCardPerfil(partido: Partido, database: FirebaseFirestore) {
                 }
                 Spacer(modifier = Modifier.padding(vertical = 2.dp))
                 Button(
-                    onClick = {/*AQUI HABRÍA QUE IMPLEMENTAR LA ELIMINACIÓN DEL PARTIDO EN LA BASE DE DATOS, se deberá notificar al resto de jugadores apuntados al partido*/},
+                    onClick = {
+                        runBlocking {
+                            GestionPartido().changeEstadoToAcabado(partido, database)
+                        }
+                    },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
