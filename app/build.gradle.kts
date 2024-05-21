@@ -80,5 +80,10 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
+    implementation("com.google.firebase:firebase-storage-ktx:20.1.0")
+    implementation("com.google.firebase:firebase-messaging-ktx:23.1.2")
+    implementation("com.github.dhaval2404:imagepicker:2.1")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.hbb20:ccp:2.5.0")
 }
