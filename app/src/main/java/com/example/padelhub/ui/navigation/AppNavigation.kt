@@ -29,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
     val navController = rememberNavController()
     var filtroBusqueda by remember { mutableStateOf("") }
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
+    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Inicio.route){
         composable(route=AppScreens.HomeScreen_Login.route){
             LoginScreen(navController, auth)
         }

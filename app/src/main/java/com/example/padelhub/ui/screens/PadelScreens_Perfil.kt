@@ -202,7 +202,7 @@ fun InfoUsuarioScreen(navController: NavController, auth: FirebaseAuth, database
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .padding(16.dp)
+                .padding(16.dp) //aqui esta el error de la linea blanca que sale
                 .fillMaxWidth()
         ){
             Row(
