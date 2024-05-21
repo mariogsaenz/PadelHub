@@ -1,6 +1,7 @@
 package com.example.padelhub.persistencia
 
 import android.util.Log
+import androidx.navigation.NavController
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.modelo.Usuario
 import com.google.firebase.auth.FirebaseAuth
@@ -60,8 +61,7 @@ class GestionPartido {
     }
 
 
-    suspend fun crear(fecha: String,hora: String,ubicacion: String, nombre:String,
-                             database: FirebaseFirestore, auth: FirebaseAuth){
+    suspend fun crear(fecha: String,hora: String,ubicacion: String, nombre:String, database: FirebaseFirestore, auth: FirebaseAuth){
         val usuario: Usuario?
         runBlocking {
             usuario= GestionUsuario().getUsuarioActual(auth, database)
@@ -112,7 +112,104 @@ class GestionPartido {
             .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
     }
 
+    suspend fun unirmeAPartido(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController){
 
+        val sfDocRef = database.collection("partido").document(partido.id)
+
+        val usuario: Usuario?
+        runBlocking {
+            usuario= GestionUsuario().getUsuarioActual(auth, database)
+        }
+        usuario?.let {
+            database.runTransaction { transaction ->
+
+
+                //AQUÍ DEBERÍA MANDAR MENSAJE DE SOLICITUD AL CHAT DEL PARTIDO
+
+                val snapshot = transaction.get(sfDocRef)
+                val jugadores = snapshot.get("jugadores") as? MutableList<String> ?: mutableListOf()
+                if (!jugadores.contains(usuario.id)) {
+                    jugadores.add(usuario.id)
+                    transaction.update(sfDocRef, "jugadores", jugadores)
+                }
+
+                // Success
+                null
+            }.addOnSuccessListener{
+                    var usuarioDB = database.collection("usuario").document(usuario.id)
+                    database.runTransaction { transaction ->
+                        usuario.partidosActivos.add(partido.id)
+                        transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
+                        android.util.Log.d("Transacción", "Transaction success!")
+                        // Success
+                        null
+                    }
+            }.addOnFailureListener { e -> Log.w("Partido", "Error", e) }
+        }
+        actualizarInterfaz(navController)
+    }
+
+    suspend fun desapuntarmeDePartido(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController){
+
+        val sfDocRef = database.collection("partido").document(partido.id)
+
+        val usuario: Usuario?
+        runBlocking {
+            usuario= GestionUsuario().getUsuarioActual(auth, database)
+        }
+        usuario?.let {
+            database.runTransaction { transaction ->
+
+
+                //AQUÍ DEBERÍA MANDAR MENSAJE AL CHAT DEL PARTIDO INFORMANDO QUE SE HA DESAPUNTADO
+
+                val snapshot = transaction.get(sfDocRef)
+                val jugadores = snapshot.get("jugadores") as? MutableList<String> ?: mutableListOf()
+                if (jugadores.contains(usuario.id)) {
+                    jugadores.remove(usuario.id)
+                    transaction.update(sfDocRef, "jugadores", jugadores)
+                }
+
+                // Success
+                null
+            }.addOnSuccessListener{
+                var usuarioDB = database.collection("usuario").document(usuario.id)
+                database.runTransaction { transaction ->
+                    usuario.partidosActivos.remove(partido.id)
+                    transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
+                    android.util.Log.d("Transacción", "Transaction success!")
+                    // Success
+                    null
+                }
+            }.addOnFailureListener { e -> Log.w("Partido", "Error", e) }
+        }
+        actualizarInterfaz(navController)
+    }
+
+    suspend fun estaApuntado(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth): Boolean {
+
+        val sfDocRef = database.collection("partido").document(partido.id)
+
+        val usuario: Usuario?
+        runBlocking {
+            usuario= GestionUsuario().getUsuarioActual(auth, database)
+        }
+        var boolean: Boolean = false
+        usuario?.let {
+            database.runTransaction { transaction ->
+
+                val snapshot = transaction.get(sfDocRef)
+                val jugadores = snapshot.get("jugadores") as? MutableList<String> ?: mutableListOf()
+                boolean = jugadores.contains(usuario.id)
+            }.await()
+        }
+
+        return boolean
+    }
+
+    suspend fun actualizarInterfaz(navController: NavController){
+        navController.navigate("pantalla_inicio")
+    }
 
 }
 

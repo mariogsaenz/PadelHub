@@ -91,16 +91,16 @@ import kotlinx.coroutines.runBlocking
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore) {
+fun HomeScreenInicio(navController: NavController, database: FirebaseFirestore, auth: FirebaseAuth) {
     Scaffold(
         bottomBar = { BottomNavigation(navController) }
     ) {
-        ContenidoAppInicio(navController,database)
+        ContenidoAppInicio(navController,database, auth)
     }
 }
 
 @Composable
-fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore) {
+fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore, auth: FirebaseAuth) {
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
     var filtroBusqueda by remember { mutableStateOf("") }
 
@@ -166,7 +166,7 @@ fun ContenidoAppInicio(navController: NavController, database: FirebaseFirestore
             Column(modifier = Modifier
                 .clip(RoundedCornerShape(topStart = 56.dp, topEnd = 56.dp)))
             {
-                BuscarPartidosScreen(filtroBusqueda,navController,database)
+                BuscarPartidosScreen(filtroBusqueda,navController,database, auth)
             }
         }
     }
@@ -255,7 +255,7 @@ fun CrearPartidoScreen(navController: NavController, database: FirebaseFirestore
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, database: FirebaseFirestore) {
+fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, database: FirebaseFirestore, auth: FirebaseAuth) {
     LazyColumn(
         flingBehavior = ScrollableDefaults.flingBehavior(),
         state = rememberLazyListState(),
@@ -284,7 +284,17 @@ fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, da
             ) {
                 Column(
                 ) {
-                    ExpandableCard(partido = it, database)
+                    var booliano1: Boolean;
+                    runBlocking {
+                        booliano1 = GestionPartido().estaApuntado(partido=it,database, auth)
+                    }
+                    Log.d("Valor del boleano: ", booliano1.toString())
+                    if(booliano1){
+                        ExpandableCard2(partido = it, database, auth, navController)
+                    }
+                    else{
+                        ExpandableCard(partido = it, database, auth, navController)
+                    }
                 }
             }
         }
@@ -296,7 +306,17 @@ fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, da
             ) {
                 Column(
                 ) {
-                    ExpandableCard(partido = it, database)
+                    var booliano2: Boolean;
+                    runBlocking {
+                        booliano2 = GestionPartido().estaApuntado(partido=it,database, auth)
+                    }
+                    Log.d("Valor del boleano: ", booliano2.toString())
+                    if(booliano2){
+                        ExpandableCard2(partido = it, database, auth, navController)
+                    }
+                    else{
+                        ExpandableCard(partido = it, database, auth, navController)
+                    }
                 }
             }
         }
@@ -306,11 +326,11 @@ fun BuscarPartidosScreen(filtroBusqueda: String,navController: NavController, da
 
 
 @Composable
-fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
+fun ExpandableCard(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController) {
 
     Card(
         shape = RoundedCornerShape(40.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) ,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(7.dp),
@@ -395,12 +415,16 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
                 }
                 Spacer(modifier = Modifier.padding(vertical = 2.dp))
                 Button(
-                    onClick = {database.collection("partido").get()},
+                    onClick = {
+                        runBlocking {
+                            GestionPartido().unirmeAPartido(partido, database, auth, navController)
+                        }
+                    },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72))
-                ){
+                ) {
                     Text(
                         "Solicitar unirme",
                         modifier = Modifier
@@ -411,4 +435,117 @@ fun ExpandableCard(partido: Partido, database: FirebaseFirestore) {
         }
     }
 }
+
+@Composable
+fun ExpandableCard2(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController) {
+
+    Card(
+        shape = RoundedCornerShape(40.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(7.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.person_24px),
+                    contentDescription = "imagenPartido",
+                    modifier = Modifier
+                        .size(75.dp)
+                        .clip(CircleShape)
+                        .padding(vertical = 10.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+                Text(
+                    text = partido.jugadores.size.toString() + "/4",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                )
+
+            }
+
+            Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = partido.nombre,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF00272B),
+                )
+                Text(
+                    text = partido.ubicacion,
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 20.sp,
+                    color = Color(0xFF00272B),
+                )
+                Spacer(modifier = Modifier.padding(vertical = 5.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.baseline_calendar_month_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Fecha partido"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
+                        text = partido.fecha,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.baseline_access_alarms_24), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat
+                        contentDescription = "Hora partido"
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp),
+                        text = partido.hora,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 13.sp
+                    )
+
+                }
+                Spacer(modifier = Modifier.padding(vertical = 2.dp))
+                Button(
+                    onClick = {
+                        runBlocking {
+                            GestionPartido().desapuntarmeDePartido(partido, database, auth, navController)
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFCB3234))
+                ){
+                    Text(
+                        "Abandonar el partido",
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
 

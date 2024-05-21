@@ -29,7 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
     val navController = rememberNavController()
     var filtroBusqueda by remember { mutableStateOf("") }
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Inicio.route){
+    NavHost(navController = navController, startDestination = AppScreens.HomeScreen_Login.route){
         composable(route=AppScreens.HomeScreen_Login.route){
             LoginScreen(navController, auth)
         }
@@ -37,7 +37,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
              RegisterScreen(navController, auth, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio.route){
-            HomeScreenInicio(navController,database)
+            HomeScreenInicio(navController,database, auth)
         }
         composable(route=AppScreens.HomeScreen_Pistas.route){
             HomeScreenPistas(navController,database)
@@ -55,7 +55,7 @@ fun AppNavigation(auth: FirebaseAuth, database: FirebaseFirestore){
             AnadirPistaScreen(navController, database)
         }
         composable(route=AppScreens.HomeScreen_Inicio_BuscarPartidos.route){
-            BuscarPartidosScreen(filtroBusqueda,navController, database)
+            BuscarPartidosScreen(filtroBusqueda,navController, database, auth)
         }
         composable(route=AppScreens.HomeScreen_Perfil_ModificarDatos.route){
             ModificarDatosScreen(auth, navController, database)
