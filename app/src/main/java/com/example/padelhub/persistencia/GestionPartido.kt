@@ -2,6 +2,7 @@ package com.example.padelhub.persistencia
 
 import android.util.Log
 import androidx.navigation.NavController
+import com.example.padelhub.modelo.ChatMessage
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.modelo.Usuario
 import com.google.firebase.auth.FirebaseAuth
@@ -61,10 +62,10 @@ class GestionPartido {
     }
 
 
-    suspend fun crear(fecha: String,hora: String,ubicacion: String, nombre:String, database: FirebaseFirestore, auth: FirebaseAuth){
+    suspend fun crear(fecha: String,hora: String,ubicacion: String, nombre:String, database: FirebaseFirestore, auth: FirebaseAuth) {
         val usuario: Usuario?
         runBlocking {
-            usuario= GestionUsuario().getUsuarioActual(auth, database)
+            usuario = GestionUsuario().getUsuarioActual(auth, database)
         }
         val lista = mutableListOf<String>()
         usuario?.let { lista.add(it.id) }
@@ -78,21 +79,39 @@ class GestionPartido {
             "estado" to true
         )
         database.collection("partido").add(partido)
-            .addOnSuccessListener {it2->
+            .addOnSuccessListener { it2 ->
                 usuario?.let {
                     var usuarioDB = database.collection("usuario").document(usuario.id)
                     database.runTransaction { transaction ->
                         usuario.partidosActivos.add(it2.id)
                         transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
+                        //Crear chat room
+                        val mensajes = mutableListOf<ChatMessage>()
+                        val participantes = mutableListOf<String>(usuario.id)
+                        val chatroom = hashMapOf(
+                            "userIds" to participantes,
+                            "messages" to mensajes,
+                        )
+                        database.collection("chatroom").add(chatroom)
+                            .addOnSuccessListener { newChat ->
+                                database.runTransaction { transaction ->
+                                    usuario.chatrooms.add(newChat.id)
+                                    transaction.update(usuarioDB, "chatrooms", usuario.chatrooms)
+                                }
+                                // Success
+                                null
 
-                        // Success
-                        null
-
+                            }
                     }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
-                    .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
+                        .addOnFailureListener { e ->
+                            Log.w(
+                                "Transacción",
+                                "Transaction failure.",
+                                e
+                            )
+                        }
                 }
-            }
-            .addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
+            }.addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
     }
      suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore){
         val sfDocRef = database.collection("partido").document(partido.id)

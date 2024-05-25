@@ -1,5 +1,6 @@
 package com.example.padelhub
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -46,10 +47,9 @@ class MainActivity : ComponentActivity() {
         // Initialize Firebase Database
         database = Firebase.firestore
         // [END initialize_database
-
         setContent {
             PadelHubTheme {
-                AppNavigation(auth, database)
+                AppNavigation(auth, database, this)
             }
         }
     }

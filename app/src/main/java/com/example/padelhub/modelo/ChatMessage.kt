@@ -1,9 +1,9 @@
 package com.example.padelhub.modelo
 
-import java.sql.Timestamp
+import java.util.Date
 
 data class ChatMessage(
     val message: String= "",
-    val senderid: String= "",
-    val timestamp: Timestamp? = null
+    val senderId: String= "",
+    val timestamp: Date? = null
 )

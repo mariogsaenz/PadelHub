@@ -106,7 +106,7 @@ fun BottomNavigation(navController: NavController) {
                             contentDescription = "Pistas"
                         )
                     }
-                    IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Chat.route) }) {
+                    IconButton(onClick = { navController.navigate(route = AppScreens.HomeScreen_Chat_List.route) }) {
                         Icon(
                             modifier = Modifier.size(30.dp),
                             painter = painterResource(id = R.drawable.chat_24px), // Reemplaza R.drawable.ic_chat con el recurso de tu icono de chat

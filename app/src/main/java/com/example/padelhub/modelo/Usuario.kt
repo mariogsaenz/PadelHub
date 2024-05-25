@@ -6,6 +6,6 @@ data class Usuario(
     val edad: Long = 0,
     val email: String = "",
     val partidosActivos: MutableList<String> = mutableListOf<String>(),
-    val telefono: String = ""
+    val chatrooms: MutableList<String> = mutableListOf<String>()
 )
 

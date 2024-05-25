@@ -28,11 +28,13 @@ class GestionUsuario {
                         Toast.LENGTH_SHORT,
                     ).show()
                     val partidos = listOf<String>()
+                    val chats = listOf<String>()
                     val usuario = hashMapOf(
                         "email" to email,
                         "nombre" to nombre,
                         "edad" to edad,
-                        "partidosActivos" to partidos
+                        "partidosActivos" to partidos,
+                        "chatrooms" to chats
                     )
                     database.collection("usuario").add(usuario)
                         .addOnSuccessListener { Log.d(MainActivity.TAG, "DocumentSnapshot successfully written!") }
