@@ -23,9 +23,9 @@ class GestionPartido {
                 .get()
                 .await()
             Log.d("document: ", documents.toString())
-            for(document in documents) {
+            for (document in documents) {
                 val partido = document.toObject(Partido::class.java)
-                partido.id=document.id
+                partido.id = document.id
                 Log.d("partidfo: ", partido.toString())
                 myList.add(partido)
                 Log.d("LA LISTA1: ", myList.toString())
@@ -37,13 +37,13 @@ class GestionPartido {
         return myList
     }
 
-    suspend fun getPartido(id: String,database: FirebaseFirestore): Partido {
+    suspend fun getPartido(id: String, database: FirebaseFirestore): Partido {
         var partido = Partido()
 
         try {
             val document = database.collection("partido").document(id).get().await()
             partido = document.toObject(Partido::class.java)!!
-            partido.id=document.id
+            partido.id = document.id
 
         } catch (e: Exception) {
             Log.d("Error al buscar partidos: ", e.message.toString())
@@ -78,7 +78,14 @@ class GestionPartido {
     }
 
 
-    suspend fun crear(fecha: String,hora: String,ubicacion: String, nombre:String, database: FirebaseFirestore, auth: FirebaseAuth) {
+    suspend fun crear(
+        fecha: String,
+        hora: String,
+        ubicacion: String,
+        nombre: String,
+        database: FirebaseFirestore,
+        auth: FirebaseAuth
+    ) {
         val usuario: Usuario?
         runBlocking {
             usuario = GestionUsuario().getUsuarioActual(auth, database)
@@ -130,44 +137,71 @@ class GestionPartido {
                 }
             }.addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
     }
-     suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore){
+
+    suspend fun cancelarPartido(partido: Partido, database: FirebaseFirestore) {
+        var chatRoom = Chatroom()
+        val jugadoresQuery = database.collection("jugadores")
+            .get()
+            .await()
+        Log.d("HASBU JUGADORES", jugadoresQuery.toString())
+        database.runTransaction { transaction2 ->
+            try {
+                for (jugador in jugadoresQuery.documents) {
+                    val jugadorRef = database.collection("jugadores").document(jugador.id)
+                    var user = jugador.toObject(Usuario::class.java)
+                    user?.partidosActivos?.remove(partido.id)
+                    user?.chatrooms?.remove(chatRoom.chatroomId)
+                    transaction2.update(jugadorRef, "partidosActivos", user?.partidosActivos)
+                    transaction2.update(jugadorRef, "chatrooms", user?.chatrooms)
+                }
+            } catch (e: Exception) {
+                Log.e("Error", "Error al obtener la lista de jugadores: ${e.message}")
+            }
+        }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
+            .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
+
+    }
+
+    suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore) {
         val sfDocRef = database.collection("partido").document(partido.id)
 
+        // Ejecutar la transacción
         database.runTransaction { transaction ->
-
+            // Cambiar el estado del partido a 'false'
             transaction.update(sfDocRef, "estado", false)
 
-            //AQUÍ HABRÍA QUE HACER
-            //Recorrer la lista de jugadores
-            //Para cada jugador, meternos en su lista de partidos activos
-            //y eliminar el partido cuyo id coincida con el partido que estamos eliminando
-
-            // Success
+            // Transacción exitosa
             null
         }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
             .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
+
     }
 
-    suspend fun unirmeAPartido(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController){
+    suspend fun unirmeAPartido(
+        partido: Partido,
+        database: FirebaseFirestore,
+        auth: FirebaseAuth,
+        navController: NavController
+    ) {
 
         val sfDocRef = database.collection("partido").document(partido.id)
         var chatRoom = Chatroom()
         val usuario: Usuario?
         runBlocking {
-            usuario= GestionUsuario().getUsuarioActual(auth, database)
+            usuario = GestionUsuario().getUsuarioActual(auth, database)
         }
         usuario?.let {
             val docChatRooms = database.collection("chatroom")
-                .whereEqualTo("partido",partido.id)
+                .whereEqualTo("partido", partido.id)
                 .get()
                 .await()
-            for(document in docChatRooms.documents){
-                chatRoom= document.toObject<Chatroom>(Chatroom::class.java)!!
-                chatRoom.chatroomId=document.id
+            for (document in docChatRooms.documents) {
+                chatRoom = document.toObject<Chatroom>(Chatroom::class.java)!!
+                chatRoom.chatroomId = document.id
                 chatRoom.userIds.add(usuario.id)
-                val chatRef= database.collection("chatroom").document(chatRoom.chatroomId)
-                database.runTransaction { addUserChat->
-                    addUserChat.update(chatRef,"userIds", chatRoom.userIds)
+                val chatRef = database.collection("chatroom").document(chatRoom.chatroomId)
+                database.runTransaction { addUserChat ->
+                    addUserChat.update(chatRef, "userIds", chatRoom.userIds)
                 }
             }
             database.runTransaction { transaction ->
@@ -180,49 +214,51 @@ class GestionPartido {
                 }
                 // Success
                 null
-            }.addOnSuccessListener{
-                    var usuarioDB = database.collection("usuario").document(usuario.id)
-                    database.runTransaction { transaction ->
-                        usuario.partidosActivos.add(partido.id)
-                        usuario.chatrooms.add(chatRoom.chatroomId)
-                        transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
-                        transaction.update(usuarioDB, "chatrooms", usuario.chatrooms)
-                        // Success
-                        null
-                    }
+            }.addOnSuccessListener {
+                var usuarioDB = database.collection("usuario").document(usuario.id)
+                database.runTransaction { transaction ->
+                    usuario.partidosActivos.add(partido.id)
+                    usuario.chatrooms.add(chatRoom.chatroomId)
+                    transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
+                    transaction.update(usuarioDB, "chatrooms", usuario.chatrooms)
+                    // Success
+                    null
+                }
             }.addOnFailureListener { e -> Log.w("Partido", "Error", e) }
         }
-
         actualizarInterfaz(navController)
     }
 
-    suspend fun desapuntarmeDePartido(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController){
+    suspend fun desapuntarmeDePartido(
+        partido: Partido,
+        database: FirebaseFirestore,
+        auth: FirebaseAuth,
+        navController: NavController
+    ) {
 
         val sfDocRef = database.collection("partido").document(partido.id)
         var chatRoom = Chatroom()
         val usuario: Usuario?
         runBlocking {
-            usuario= GestionUsuario().getUsuarioActual(auth, database)
+            usuario = GestionUsuario().getUsuarioActual(auth, database)
         }
         usuario?.let {
             val docChatRooms = database.collection("chatroom")
-                .whereEqualTo("partido",partido.id)
+                .whereEqualTo("partido", partido.id)
                 .get()
                 .await()
-            for(document in docChatRooms.documents){
-                chatRoom= document.toObject<Chatroom>(Chatroom::class.java)!!
-                chatRoom.chatroomId=document.id
-                if(chatRoom.userIds.contains(usuario.id)) {
+            for (document in docChatRooms.documents) {
+                chatRoom = document.toObject<Chatroom>(Chatroom::class.java)!!
+                chatRoom.chatroomId = document.id
+                if (chatRoom.userIds.contains(usuario.id)) {
                     chatRoom.userIds.remove(usuario.id)
-                    val chatRef= database.collection("chatroom").document(chatRoom.chatroomId)
-                    database.runTransaction { addUserChat->
-                        addUserChat.update(chatRef,"userIds", chatRoom.userIds)
+                    val chatRef = database.collection("chatroom").document(chatRoom.chatroomId)
+                    database.runTransaction { addUserChat ->
+                        addUserChat.update(chatRef, "userIds", chatRoom.userIds)
                     }
                 }
-
             }
             database.runTransaction { transaction ->
-
 
                 //AQUÍ DEBERÍA MANDAR MENSAJE AL CHAT DEL PARTIDO INFORMANDO QUE SE HA DESAPUNTADO
 
@@ -233,11 +269,9 @@ class GestionPartido {
                     transaction.update(sfDocRef, "jugadores", jugadores)
                 }
 
-
-
                 // Success
                 null
-            }.addOnSuccessListener{
+            }.addOnSuccessListener {
                 var usuarioDB = database.collection("usuario").document(usuario.id)
                 database.runTransaction { transaction ->
                     usuario.partidosActivos.remove(partido.id)
@@ -254,13 +288,17 @@ class GestionPartido {
         actualizarInterfaz(navController)
     }
 
-    suspend fun estaApuntado(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth): Boolean {
+    suspend fun estaApuntado(
+        partido: Partido,
+        database: FirebaseFirestore,
+        auth: FirebaseAuth
+    ): Boolean {
 
         val sfDocRef = database.collection("partido").document(partido.id)
 
         val usuario: Usuario?
         runBlocking {
-            usuario= GestionUsuario().getUsuarioActual(auth, database)
+            usuario = GestionUsuario().getUsuarioActual(auth, database)
         }
         var boolean: Boolean = false
         usuario?.let {
@@ -275,10 +313,9 @@ class GestionPartido {
         return boolean
     }
 
-    suspend fun actualizarInterfaz(navController: NavController){
+    suspend fun actualizarInterfaz(navController: NavController) {
         navController.navigate("pantalla_inicio")
     }
 
 }
-
 

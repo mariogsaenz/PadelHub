@@ -415,7 +415,6 @@ fun ExpandableCardPerfil(partido: Partido, database: FirebaseFirestore) {
                 )
 
             }
-
             Spacer(modifier = Modifier.padding(horizontal = 10.dp))
             Column(
                 modifier = Modifier
@@ -471,6 +470,7 @@ fun ExpandableCardPerfil(partido: Partido, database: FirebaseFirestore) {
                     onClick = {
                         runBlocking {
                             GestionPartido().changeEstadoToAcabado(partido, database)
+                            GestionPartido().cancelarPartido(partido, database)
                         }
                     },
                     modifier = Modifier

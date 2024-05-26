@@ -333,7 +333,6 @@ fun ContenidoChatRooms(navController: NavController, database: FirebaseFirestore
                     .padding(10.dp, 0.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Text(
                     modifier = Modifier
                         .padding(8.dp),
@@ -343,13 +342,14 @@ fun ContenidoChatRooms(navController: NavController, database: FirebaseFirestore
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 )
-                Column(
+
+            }
+            Column(
                     modifier = Modifier
                         .clip(RoundedCornerShape(topStart = 56.dp, topEnd = 56.dp))
-                )
-                {
-                    ListarChats(navController, database, auth)
-                }
+                    )
+            {
+                ListarChats(navController, database, auth)
             }
         }
     }
