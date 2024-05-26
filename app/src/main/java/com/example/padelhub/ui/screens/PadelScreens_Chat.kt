@@ -391,7 +391,8 @@ fun ListarChats(navController: NavController, database: FirebaseFirestore, auth:
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardChat(chatroom: Chatroom, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController) {
-
+    var partidoChat=Partido()
+    runBlocking { partidoChat=GestionPartido().getPartido(chatroom.partido,database) }
     Card(
         shape = RoundedCornerShape(40.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -436,7 +437,7 @@ fun CardChat(chatroom: Chatroom, database: FirebaseFirestore, auth: FirebaseAuth
                     .padding(horizontal = 8.dp)
             ) {
                 Text(
-                    text = chatroom.chatroomId,
+                    text = partidoChat.nombre,
                     style = MaterialTheme.typography.labelMedium,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,

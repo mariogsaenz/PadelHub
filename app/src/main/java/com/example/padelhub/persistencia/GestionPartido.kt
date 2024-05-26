@@ -37,6 +37,21 @@ class GestionPartido {
         return myList
     }
 
+    suspend fun getPartido(id: String,database: FirebaseFirestore): Partido {
+        var partido = Partido()
+
+        try {
+            val document = database.collection("partido").document(id).get().await()
+            partido = document.toObject(Partido::class.java)!!
+            partido.id=document.id
+
+        } catch (e: Exception) {
+            Log.d("Error al buscar partidos: ", e.message.toString())
+        }
+
+        return partido
+    }
+
     suspend fun fetchNombre(filtroBusqueda: String, database: FirebaseFirestore): List<Partido> {
         val myList2 = mutableListOf<Partido>()
 
