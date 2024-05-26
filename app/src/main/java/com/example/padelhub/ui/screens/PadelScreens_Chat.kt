@@ -178,50 +178,61 @@ fun TextMessageOther(text: String, color: Color = Color.White) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ContenidoAppChat(chatroomId: String, database: FirebaseFirestore,auth: FirebaseAuth) {
+fun ContenidoAppChat(chatroomId: String, database: FirebaseFirestore, auth: FirebaseAuth) {
     var messageText by remember { mutableStateOf(TextFieldValue()) }
     var messages by remember { mutableStateOf(listOf<ChatMessage>()) }
     val context = LocalContext.current
     var usuarioActivo: Usuario? = null
+    val listState = rememberLazyListState()
+
     runBlocking {
-        runBlocking {
-            usuarioActivo = GestionUsuario().getUsuarioActual(auth,database)
-        }
+        usuarioActivo = GestionUsuario().getUsuarioActual(auth, database)
     }
 
     val docRef = database.collection("chatroom").document(chatroomId)
-    docRef.addSnapshotListener { snapshot, e ->
-        if (e != null) {
-            Log.w("Chat", "Listen failed.", e)
-            return@addSnapshotListener
+    DisposableEffect(chatroomId) {
+        val registration = docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w("Chat", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                val chatroom = snapshot.toObject(Chatroom::class.java)
+                if (chatroom != null) {
+                    messages = chatroom.messages
+                }
+                Log.d("Chat", "Current data: ${snapshot.data}")
+            } else {
+                Log.d("Chat", "Current data: null")
+            }
         }
 
-        if (snapshot != null && snapshot.exists()) {
-            val chatroom = snapshot.toObject(Chatroom::class.java)
-            if (chatroom != null) {
-                messages = chatroom.messages
-            }
-            Log.d("Chat", "Current data: ${snapshot.data}")
-        } else {
-            Log.d("Chat", "Current data: null")
+        onDispose {
+            registration.remove()
+        }
+    }
+
+    LaunchedEffect(messages) {
+        if (messages.isNotEmpty()) {
+            listState.animateScrollToItem(messages.size - 1)
         }
     }
 
     val backgroundImage: Painter = painterResource(id = R.drawable.fondo)
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .paint(
-            // Replace with your image id
-            painterResource(id = R.drawable.fondo),
-            contentScale = ContentScale.FillBounds
-        )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .paint(
+                painterResource(id = R.drawable.fondo),
+                contentScale = ContentScale.FillBounds
+            )
     ) {
         Image(
             painter = backgroundImage,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .matchParentSize(),
+            modifier = Modifier.matchParentSize()
         )
         Column(
             modifier = Modifier
@@ -238,19 +249,17 @@ fun ContenidoAppChat(chatroomId: String, database: FirebaseFirestore,auth: Fireb
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(8.dp),
+                    modifier = Modifier.padding(8.dp),
                     text = "Chat",
                     style = MaterialTheme.typography.titleLarge,
-                    color=Color.White,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Start
                 )
             }
-            Column(
-                modifier = Modifier.padding(8.dp)
-            ) {
+            Column(modifier = Modifier.padding(8.dp)) {
                 LazyColumn(
+                    state = listState,
                     horizontalAlignment = Alignment.Start,
                     modifier = Modifier.weight(1f)
                 ) {
@@ -267,9 +276,7 @@ fun ContenidoAppChat(chatroomId: String, database: FirebaseFirestore,auth: Fireb
                 ) {
                     TextField(
                         value = messageText,
-                        onValueChange = {
-                            messageText = it
-                        },
+                        onValueChange = { messageText = it },
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -277,13 +284,13 @@ fun ContenidoAppChat(chatroomId: String, database: FirebaseFirestore,auth: Fireb
                         onClick = {
                             if (messageText.text.isNotEmpty()) {
                                 runBlocking {
-                                    GestionChat().enviarMensaje(chatroomId,messageText.text,database, auth)
+                                    GestionChat().enviarMensaje(chatroomId, messageText.text, database, auth)
                                 }
                                 messageText = TextFieldValue()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF005D72))
-                    ){
+                    ) {
                         Icon(Icons.Filled.Send, contentDescription = "Enviar")
                     }
                 }

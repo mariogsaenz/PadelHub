@@ -3,6 +3,7 @@ package com.example.padelhub.persistencia
 import android.util.Log
 import androidx.navigation.NavController
 import com.example.padelhub.modelo.ChatMessage
+import com.example.padelhub.modelo.Chatroom
 import com.example.padelhub.modelo.Partido
 import com.example.padelhub.modelo.Usuario
 import com.google.firebase.auth.FirebaseAuth
@@ -89,6 +90,7 @@ class GestionPartido {
                         val mensajes = mutableListOf<ChatMessage>()
                         val participantes = mutableListOf<String>(usuario.id)
                         val chatroom = hashMapOf(
+                            "partido" to it2.id,
                             "userIds" to participantes,
                             "messages" to mensajes,
                         )
@@ -134,49 +136,76 @@ class GestionPartido {
     suspend fun unirmeAPartido(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController){
 
         val sfDocRef = database.collection("partido").document(partido.id)
-
+        var chatRoom = Chatroom()
         val usuario: Usuario?
         runBlocking {
             usuario= GestionUsuario().getUsuarioActual(auth, database)
         }
         usuario?.let {
+            val docChatRooms = database.collection("chatroom")
+                .whereEqualTo("partido",partido.id)
+                .get()
+                .await()
+            for(document in docChatRooms.documents){
+                chatRoom= document.toObject<Chatroom>(Chatroom::class.java)!!
+                chatRoom.chatroomId=document.id
+                chatRoom.userIds.add(usuario.id)
+                val chatRef= database.collection("chatroom").document(chatRoom.chatroomId)
+                database.runTransaction { addUserChat->
+                    addUserChat.update(chatRef,"userIds", chatRoom.userIds)
+                }
+            }
             database.runTransaction { transaction ->
-
-
                 //AQUÍ DEBERÍA MANDAR MENSAJE DE SOLICITUD AL CHAT DEL PARTIDO
-
                 val snapshot = transaction.get(sfDocRef)
                 val jugadores = snapshot.get("jugadores") as? MutableList<String> ?: mutableListOf()
                 if (!jugadores.contains(usuario.id)) {
                     jugadores.add(usuario.id)
                     transaction.update(sfDocRef, "jugadores", jugadores)
                 }
-
                 // Success
                 null
             }.addOnSuccessListener{
                     var usuarioDB = database.collection("usuario").document(usuario.id)
                     database.runTransaction { transaction ->
                         usuario.partidosActivos.add(partido.id)
+                        usuario.chatrooms.add(chatRoom.chatroomId)
                         transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
-                        android.util.Log.d("Transacción", "Transaction success!")
+                        transaction.update(usuarioDB, "chatrooms", usuario.chatrooms)
                         // Success
                         null
                     }
             }.addOnFailureListener { e -> Log.w("Partido", "Error", e) }
         }
+
         actualizarInterfaz(navController)
     }
 
     suspend fun desapuntarmeDePartido(partido: Partido, database: FirebaseFirestore, auth: FirebaseAuth, navController: NavController){
 
         val sfDocRef = database.collection("partido").document(partido.id)
-
+        var chatRoom = Chatroom()
         val usuario: Usuario?
         runBlocking {
             usuario= GestionUsuario().getUsuarioActual(auth, database)
         }
         usuario?.let {
+            val docChatRooms = database.collection("chatroom")
+                .whereEqualTo("partido",partido.id)
+                .get()
+                .await()
+            for(document in docChatRooms.documents){
+                chatRoom= document.toObject<Chatroom>(Chatroom::class.java)!!
+                chatRoom.chatroomId=document.id
+                if(chatRoom.userIds.contains(usuario.id)) {
+                    chatRoom.userIds.remove(usuario.id)
+                    val chatRef= database.collection("chatroom").document(chatRoom.chatroomId)
+                    database.runTransaction { addUserChat->
+                        addUserChat.update(chatRef,"userIds", chatRoom.userIds)
+                    }
+                }
+
+            }
             database.runTransaction { transaction ->
 
 
@@ -189,18 +218,23 @@ class GestionPartido {
                     transaction.update(sfDocRef, "jugadores", jugadores)
                 }
 
+
+
                 // Success
                 null
             }.addOnSuccessListener{
                 var usuarioDB = database.collection("usuario").document(usuario.id)
                 database.runTransaction { transaction ->
                     usuario.partidosActivos.remove(partido.id)
+                    usuario.chatrooms.remove(chatRoom.chatroomId)
                     transaction.update(usuarioDB, "partidosActivos", usuario.partidosActivos)
+                    transaction.update(usuarioDB, "chatrooms", usuario.chatrooms)
                     android.util.Log.d("Transacción", "Transaction success!")
                     // Success
                     null
                 }
             }.addOnFailureListener { e -> Log.w("Partido", "Error", e) }
+
         }
         actualizarInterfaz(navController)
     }
