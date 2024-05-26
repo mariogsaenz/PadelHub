@@ -146,9 +146,11 @@ class GestionPartido {
         Log.d("HASBU JUGADORES", jugadoresQuery.toString())
         database.runTransaction { transaction2 ->
             try {
+                Log.d("HASBU JUGADORES", jugadoresQuery.toString())
                 for (jugador in jugadoresQuery.documents) {
                     val jugadorRef = database.collection("jugadores").document(jugador.id)
                     var user = jugador.toObject(Usuario::class.java)
+                    Log.d("Mensaje","Partido a eliminar: " + partido.id);
                     user?.partidosActivos?.remove(partido.id)
                     user?.chatrooms?.remove(chatRoom.chatroomId)
                     transaction2.update(jugadorRef, "partidosActivos", user?.partidosActivos)
