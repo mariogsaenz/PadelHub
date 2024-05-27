@@ -140,10 +140,7 @@ class GestionPartido {
 
     suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore) {
         val sfDocRef = database.collection("partido").document(partido.id)
-
-        // Ejecutar la transacción
         database.runTransaction { transaction ->
-            // Cambiar el estado del partido a 'false'
             transaction.update(sfDocRef, "estado", false)
 
             // Transacción exitosa
@@ -159,11 +156,9 @@ class GestionPartido {
             .await()
         database.runTransaction { transaction2 ->
             try {
-                Log.d("HASBU JUGADORES", jugadoresQuery.toString())
                 for (jugador in jugadoresQuery.documents) {
                     val jugadorRef = database.collection("usuario").document(jugador.id)
                     var user = jugador.toObject(Usuario::class.java)
-                    Log.d("Mensaje","Partido a eliminar: " + partido.id);
                     user?.partidosActivos?.remove(partido.id)
                     transaction2.update(jugadorRef, "partidosActivos", user?.partidosActivos)
                 }

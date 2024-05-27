@@ -490,6 +490,7 @@ fun ExpandableCardPerfil(partido: Partido, database: FirebaseFirestore) {
     }
 }
 
+
 @Composable
 fun ExpandableCardPerfil2(partido: Partido, database: FirebaseFirestore) {
 
