@@ -1,32 +1,24 @@
 package com.example.padelhub.ui.screens
 
-import com.example.padelhub.ui.navigation.AppScreens
 import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 /**
  * Composable principal que sirve como contenedor
@@ -44,6 +36,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -56,6 +49,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
@@ -297,6 +291,7 @@ fun BuscarPistasScreen(filtroBusqueda: String, navController: NavController, dat
 fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
 
     var expanded by remember { mutableStateOf (false) }
+    var showDialog by remember { mutableStateOf (false) }
 
     Card(
         shape = RoundedCornerShape(40.dp),
@@ -365,8 +360,16 @@ fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
                     fontSize = 13.sp
                 )
                 Spacer(modifier = Modifier.padding(vertical = 2.dp))
+                val onDismissRequest = {
+                    showDialog = false
+                }
+                val onConfirmation = {
+                    showDialog = false
+                }
                 Button(
-                    onClick = {database.collection("pista").get()},
+                    onClick = {
+                        showDialog = true
+                    },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
@@ -374,8 +377,55 @@ fun ExpandableCard(pista: Pista, database: FirebaseFirestore) {
                 ){
                     Text("Contactar con la pista")
                 }
+                if (showDialog) {
+                    AlertDialogExample(
+                        onDismissRequest = onDismissRequest,
+                        onConfirmation = onConfirmation,
+                        dialogTitle = pista.nombre,
+                        dialogText = "Tlf de contacto : 941 00 00 00"
+                    )
+                }
             }
         }
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AlertDialogExample(
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit,
+    dialogTitle: String,
+    dialogText: String,
+) {
+    AlertDialog(
+        title = {
+            Text(text = dialogTitle)
+        },
+        text = {
+            Text(text = dialogText)
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmation()
+                }
+            ) {
+                Text("Ok")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text("")
+            }
+        }
+    )
+}

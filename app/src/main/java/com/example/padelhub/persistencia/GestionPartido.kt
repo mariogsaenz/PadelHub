@@ -138,30 +138,6 @@ class GestionPartido {
             }.addOnFailureListener { e -> Log.w("Partido", "Error writing document", e) }
     }
 
-    suspend fun cancelarPartido(partido: Partido, database: FirebaseFirestore) {
-        var chatRoom = Chatroom()
-        val jugadoresQuery = database.collection("jugadores")
-            .get()
-            .await()
-        Log.d("HASBU JUGADORES", jugadoresQuery.toString())
-        database.runTransaction { transaction2 ->
-            try {
-                for (jugador in jugadoresQuery.documents) {
-                    val jugadorRef = database.collection("jugadores").document(jugador.id)
-                    var user = jugador.toObject(Usuario::class.java)
-                    user?.partidosActivos?.remove(partido.id)
-                    user?.chatrooms?.remove(chatRoom.chatroomId)
-                    transaction2.update(jugadorRef, "partidosActivos", user?.partidosActivos)
-                    transaction2.update(jugadorRef, "chatrooms", user?.chatrooms)
-                }
-            } catch (e: Exception) {
-                Log.e("Error", "Error al obtener la lista de jugadores: ${e.message}")
-            }
-        }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
-            .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
-
-    }
-
     suspend fun changeEstadoToAcabado(partido: Partido, database: FirebaseFirestore) {
         val sfDocRef = database.collection("partido").document(partido.id)
 
@@ -172,6 +148,60 @@ class GestionPartido {
 
             // Transacción exitosa
             null
+        }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
+            .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
+
+    }
+
+    suspend fun quitarPartidosActivos(partido: Partido, database: FirebaseFirestore) {
+        val jugadoresQuery = database.collection("usuario")
+            .get()
+            .await()
+        database.runTransaction { transaction2 ->
+            try {
+                for (jugador in jugadoresQuery.documents) {
+                    val jugadorRef = database.collection("usuario").document(jugador.id)
+                    var user = jugador.toObject(Usuario::class.java)
+                    user?.partidosActivos?.remove(partido.id)
+                    transaction2.update(jugadorRef, "partidosActivos", user?.partidosActivos)
+                }
+            }
+            catch (e: Exception) {
+                Log.e("Error", "Error al obtener la lista de jugadores: ${e.message}")
+            }
+        }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
+            .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
+
+    }
+
+    suspend fun quitarChatrooms(partido: Partido, database: FirebaseFirestore) {
+        val jugadoresQuery = database.collection("usuario")
+            .get()
+            .await()
+        val chatQuery = database.collection("chatroom")
+            .get()
+            .await()
+        var idChat = ""
+        database.runTransaction { transaction2 ->
+            try {
+                for(chat in chatQuery.documents){
+                    var chatJava = chat.toObject(Chatroom::class.java)
+                    if(chatJava?.partido.equals(partido.id)){
+                        idChat = chat.id
+                    }
+                }
+                Log.d("El id del chat que estamos eliminando es: ", idChat)
+                for (jugador in jugadoresQuery.documents) {
+                    val jugadorRef = database.collection("usuario").document(jugador.id)
+                    var user = jugador.toObject(Usuario::class.java)
+                    user?.chatrooms?.remove(idChat)
+                    transaction2.update(jugadorRef, "chatrooms", user?.chatrooms)
+                }
+                Log.d("Se ha eliminado el chatroom",transaction2.toString())
+            }
+            catch (e: Exception) {
+                Log.e("Error", "Error al obtener la lista de jugadores: ${e.message}")
+            }
         }.addOnSuccessListener { Log.d("Transacción", "Transaction success!") }
             .addOnFailureListener { e -> Log.w("Transacción", "Transaction failure.", e) }
 

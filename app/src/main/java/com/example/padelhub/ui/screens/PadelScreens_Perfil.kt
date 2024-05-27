@@ -470,7 +470,8 @@ fun ExpandableCardPerfil(partido: Partido, database: FirebaseFirestore) {
                     onClick = {
                         runBlocking {
                             GestionPartido().changeEstadoToAcabado(partido, database)
-                            GestionPartido().cancelarPartido(partido, database)
+                            GestionPartido().quitarPartidosActivos(partido, database)
+                            GestionPartido().quitarChatrooms(partido, database)
                         }
                     },
                     modifier = Modifier
